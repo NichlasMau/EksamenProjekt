@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class TaskRepository {
@@ -41,4 +43,33 @@ public class TaskRepository {
         }
         return taskID;
     }
+
+    public List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection(url, user_id, user_pwd)) {
+            String SQL = "SELECT * FROM tasks;";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                int task_id = rs.getInt("task_id");
+                int subproject_id = rs.getInt("subproject_id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String status = rs.getString("status");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
+                double budget = rs.getDouble("budget");
+                double estimated_time = rs.getDouble("estimated_time");
+
+                tasks.add(new Task(task_id, subproject_id, name, description, status, start_date, end_date, budget, estimated_time));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tasks;
+    }
+
+
+
+
 }
