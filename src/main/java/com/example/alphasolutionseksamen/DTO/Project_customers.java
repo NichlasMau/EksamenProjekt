@@ -1,4 +1,4 @@
-package com.example.alphasolutionseksamen.model;
+package com.example.alphasolutionseksamen.DTO;
 
 public class Project_customers {
     private int employeeId;
