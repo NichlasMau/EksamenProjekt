@@ -6,20 +6,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
     public class UserRepository {
         @Value("${spring.datasource.url}")
         String url;
         @Value("${spring.datasource.username}")
-        String user_id;
+        String uid;
         @Value("${spring.datasource.password}")
-        String user_pwd;
+        String pwd;
 
 
     public int createUser(User newUser) {
     int userID = 0;
-    try (Connection con = DriverManager.getConnection(url, user_id, user_pwd)) {
+    try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
         String SQL = "INSERT INTO User (name, email, username, password) values (?,?,?,?);";
         PreparedStatement psmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
         psmt.setString(1, newUser.getName());
@@ -39,10 +41,60 @@ import java.sql.*;
         return userID;
     }
 
-    public User getUser(int uid) {
+    public User getUser(int userid) {
 
+        User user = null;
 
-        return null;
+        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
+            String SQL = "SELCT * FROM users WHERE user_id = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, userid);
+            ResultSet rs = pstmt.executeQuery();
+
+            if ( rs.next()) {
+                int id = (rs.getInt("user_id"));
+                String name = (rs.getString("name"));
+                String email = (rs.getString("email"));
+                String username = (rs.getString("username"));
+                String password = (rs.getString("password"));
+                user = new User (id, name, email, username, password);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    public void deleteUser(int userID) {
+        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
+            String SQL = "DELETE FROM users WHERE user_id = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, userID);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        try(Connection con = DriverManager.getConnection(url, uid, pwd)) {
+            String SQL = "SELECT * FROM users";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                    int id = rs.getInt("user_id");
+                    String name = rs.getString("name");
+                    String email = rs.getString("email");
+                    String username = rs.getString("username");
+                    String password = rs.getString("password");
+                    users.add(new User(id, name, email, username, password));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
     }
 }
-
