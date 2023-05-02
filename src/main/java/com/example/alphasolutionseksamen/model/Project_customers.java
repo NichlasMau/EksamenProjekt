@@ -1,12 +1,12 @@
 package com.example.alphasolutionseksamen.model;
 
-public class Employees {
+public class Project_customers {
     private int employeeId;
     private String name;
     private String email;
     private String password;
 
-    public Employees(int employeeId, String name, String email, String password) {
+    public Project_customers(int employeeId, String name, String email, String password) {
         this.employeeId = employeeId;
         this.name = name;
         this.email = email;

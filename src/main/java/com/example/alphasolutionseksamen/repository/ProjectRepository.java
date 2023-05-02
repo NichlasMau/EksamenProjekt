@@ -1,4 +1,6 @@
 package com.example.alphasolutionseksamen.repository;
 
-public class ProjectManager {
+public class ProjectRepository {
+
+
 }

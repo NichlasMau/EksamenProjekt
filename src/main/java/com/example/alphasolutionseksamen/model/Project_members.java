@@ -1,6 +1,5 @@
 package com.example.alphasolutionseksamen.model;
 
-public class Files {
-
+public class Project_members {
 
 }
