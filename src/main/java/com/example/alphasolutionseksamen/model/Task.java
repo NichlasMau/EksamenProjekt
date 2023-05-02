@@ -7,13 +7,13 @@ public class Task {
     private int subproject_id;
     private String name;
     private String description;
-    private Enum status;
+    private String status;
     private Date start_date;
     private Date end_date;
     private double budget;
     private double estimated_time;
 
-    public Task(int task_id, int subproject_id, String name, String description, Enum status, Date start_date, Date end_date, double budget, double estimated_time) {
+    public Task(int task_id, int subproject_id, String name, String description, String status, Date start_date, Date end_date, double budget, double estimated_time) {
         this.task_id = task_id;
         this.subproject_id = subproject_id;
         this.name = name;
@@ -57,11 +57,11 @@ public class Task {
         this.description = description;
     }
 
-    public Enum getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Enum status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
