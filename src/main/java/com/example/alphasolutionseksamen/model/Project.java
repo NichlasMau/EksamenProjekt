@@ -7,12 +7,12 @@ public class Project {
     private int project_id;
     private String name;
     private String description;
-    private Enum status;
+    private String status;
     private double budget;
     private Date startDate;
     private Date endDate;
 
-    public Project(int project_id, String name, String description, Enum status, double budget, Date startDate, Date endDate) {
+    public Project(int project_id, String name, String description, String status, double budget, Date startDate, Date endDate) {
         this.project_id = project_id;
         this.name = name;
         this.description = description;
@@ -46,11 +46,11 @@ public class Project {
         this.description = description;
     }
 
-    public Enum getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Enum status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
