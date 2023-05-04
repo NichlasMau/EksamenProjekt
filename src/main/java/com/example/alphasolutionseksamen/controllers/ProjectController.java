@@ -33,9 +33,9 @@ public class ProjectController {
         userRepository = new UserRepository();
     }
 
-     /*
+    /*
      CONTROLLER FOR PROJECTS
-     */
+    */
 
     @GetMapping(path = "/projects")
     public ResponseEntity<List<Project>> getProjects(){

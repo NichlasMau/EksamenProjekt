@@ -12,15 +12,10 @@ import java.util.List;
 
 public class ProjectRepository {
 
-    @Value("${spring.datasource.url}")
-    String db_url;
-    @Value("${spring.datasource.username}")
-    String uid;
-    @Value("${spring.datasource.password}")
-    String pwd;
+    DBConnector connector;
 
     public void createProject(Project project) {
-        try (Connection con = DriverManager.getConnection(db_url, uid, pwd))
+        try (Connection con = connector.getConnection())
         {
             String SQL = "INSERT INTO `projects` (`name`, `description`, `status`, `budget`, `start_date`, `end_date`) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement pstmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
@@ -40,7 +35,7 @@ public class ProjectRepository {
 
     public List<Project> getProjects() {
         List<Project> projects = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(db_url, uid, pwd))
+        try (Connection con = connector.getConnection())
         {
             String SQL = "SELECT * FROM projects;";
             Statement stmt = con.createStatement();
@@ -62,7 +57,7 @@ public class ProjectRepository {
     }
 
     public void deleteProject (int projectId){
-        try(Connection con = DriverManager.getConnection(db_url,uid,pwd)) {
+        try(Connection con = connector.getConnection()) {
             String SQL = "DELETE FROM projects WHERE project_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, projectId);
