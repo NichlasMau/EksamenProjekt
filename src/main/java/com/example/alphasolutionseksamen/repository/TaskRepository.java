@@ -10,16 +10,18 @@ import java.util.List;
 
 @Repository
 public class TaskRepository {
+
     @Value("${spring.datasource.url}")
-    String url;
+    String db_url;
     @Value("${spring.datasource.username}")
-    String user_id;
+    String uid;
     @Value("${spring.datasource.password}")
-    String user_pwd;
+    String pwd;
+
 
     public int createTask(Task newTask) {
         int taskID = 0;
-        try (Connection con = DriverManager.getConnection(url, user_id, user_pwd)){
+        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)){
             String SQl = "INSERT INTO tasks (task_id, subproject_id, name, description, status, start_date, end_date, budget, estimated_time) values (?,?,?,?,?,?,?,?,?);";
             PreparedStatement psmt = con.prepareStatement(SQl, Statement.RETURN_GENERATED_KEYS);
             psmt.setInt(1, newTask.getTask_id());
@@ -46,7 +48,7 @@ public class TaskRepository {
 
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(url, user_id, user_pwd)) {
+        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
             String SQL = "SELECT * FROM tasks;";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);

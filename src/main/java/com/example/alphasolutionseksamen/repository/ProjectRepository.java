@@ -12,9 +12,12 @@ import java.util.List;
 
 public class ProjectRepository {
 
-    String db_url = "jdbc:mysql://localhost:3306/projectmanagementDb";
-    String uid = "root";
-    String pwd = "Samim123";
+    @Value("${spring.datasource.url}")
+    String db_url;
+    @Value("${spring.datasource.username}")
+    String uid;
+    @Value("${spring.datasource.password}")
+    String pwd;
 
     public void createProject(Project project) {
         try (Connection con = DriverManager.getConnection(db_url, uid, pwd))

@@ -10,16 +10,19 @@ import java.util.List;
 
 @Repository
 public class SubprojectRepository {
+
     @Value("${spring.datasource.url}")
-    String url;
+    String db_url;
     @Value("${spring.datasource.username}")
     String uid;
     @Value("${spring.datasource.password}")
     String pwd;
 
+
     public List<Subproject> getSubproject() {
         List<Subproject> subprojects = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
+        System.out.println("URL:" + db_url);
+        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
             String SQL = "SELECT * FROM subprojects;";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
@@ -40,7 +43,7 @@ public class SubprojectRepository {
     }
 
     public void createSubproject(Subproject subprojects) {
-        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
+        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
             String SQL = "INSERT INTO `subproject` (`id`, `name`, `description`, `status`,`budget`,`startDate`,`endDate` ) VALUES (1, ?, ?, ?,?,?,?);";
             PreparedStatement pstmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, subprojects.getName());
@@ -57,7 +60,7 @@ public class SubprojectRepository {
     }
 
     public void deleteSubproject(int subprojectID) {
-        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
+        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
             String SQL = "DELETE FROM subprojects WHERE subproject_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, subprojectID);
