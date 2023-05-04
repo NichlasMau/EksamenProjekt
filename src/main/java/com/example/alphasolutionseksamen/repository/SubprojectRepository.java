@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class SubprojectRepository {
+public class    SubprojectRepository {
 
     DBConnector connector;
 
