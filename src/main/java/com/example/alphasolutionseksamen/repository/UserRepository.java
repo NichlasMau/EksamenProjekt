@@ -11,17 +11,17 @@ import java.util.List;
 
 @Repository
     public class UserRepository {
+        @Value("${spring.datasource.url}")
+        String url;
+        @Value("${spring.datasource.username}")
+        String uid;
+        @Value("${spring.datasource.password}")
+        String pwd;
 
-    @Value("${spring.datasource.url}")
-    String db_url;
-    @Value("${spring.datasource.username}")
-    String uid;
-    @Value("${spring.datasource.password}")
-    String pwd;
 
     public int createUser(User newUser) {
     int userID = 0;
-    try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
+    try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
         String SQL = "INSERT INTO User (name, email, username, password) values (?,?,?,?);";
         PreparedStatement psmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
         psmt.setString(1, newUser.getName());
@@ -45,7 +45,7 @@ import java.util.List;
 
         User user = null;
 
-        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
+        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
             String SQL = "SELCT * FROM users WHERE user_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, userid);
@@ -66,7 +66,7 @@ import java.util.List;
     }
 
     public void deleteUser(int userID) {
-        try (Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
+        try (Connection con = DriverManager.getConnection(url, uid, pwd)) {
             String SQL = "DELETE FROM users WHERE user_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, userID);
@@ -79,7 +79,7 @@ import java.util.List;
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        try(Connection con = DriverManager.getConnection(db_url, uid, pwd)) {
+        try(Connection con = DriverManager.getConnection(url, uid, pwd)) {
             String SQL = "SELECT * FROM users";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             ResultSet rs = pstmt.executeQuery();
