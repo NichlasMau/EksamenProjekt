@@ -27,7 +27,6 @@ public class ProjectController {
     ProjectRepository projectRepository;
     SubprojectRepository subprojectRepository;
     TaskRepository taskRepository;
-
     UserRepository userRepository;
 
     public ProjectController() {
