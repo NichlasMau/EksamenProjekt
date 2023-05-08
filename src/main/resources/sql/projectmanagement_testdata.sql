@@ -1,3 +1,5 @@
+USE projectmanagementdb;
+
 INSERT INTO users (name, email, username, password) VALUES
 ('John Doe', 'johndoe@example.com', 'johndoe', 'password123'),
 ('Jane Smith', 'janesmith@example.com', 'janesmith', 'password456'),

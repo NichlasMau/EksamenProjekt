@@ -8,6 +8,7 @@ import com.example.alphasolutionseksamen.repository.ProjectRepository;
 import com.example.alphasolutionseksamen.repository.SubprojectRepository;
 import com.example.alphasolutionseksamen.repository.TaskRepository;
 import com.example.alphasolutionseksamen.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,14 +92,15 @@ public class ProjectController {
     @PostMapping("/login")
     public String login(@RequestParam("email")String email, @RequestParam("pw") String pw,
                         HttpSession session,
-                        Model model)
+                        Model model,
+                        HttpServletRequest request)
     {
         User user = userRepository.getUserEmail(email);
         if (user != null) {
             if (user.getPassword().equals(pw)) {
                 session.setAttribute("user", user);
                 session.setMaxInactiveInterval(30);
-                return "redirect:/projects";
+                return "redirect:" + request.getContextPath() + "/projects";
             }
         }
         model.addAttribute("wrongCredentials", true);

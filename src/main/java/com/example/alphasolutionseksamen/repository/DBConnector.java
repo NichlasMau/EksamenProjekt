@@ -11,7 +11,7 @@ public class DBConnector {
     private static Connection con;
     static String db_url = "jdbc:mysql://localhost:3306/projectmanagementdb";
     static String uid = "root";
-    static String pwd = "Samim123";
+    static String pwd = "root";
 
     public static Connection getConnection() throws SQLException {
         con = DriverManager.getConnection(db_url, uid, pwd);

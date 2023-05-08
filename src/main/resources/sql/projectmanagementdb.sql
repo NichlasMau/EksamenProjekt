@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS projectmanagementDb;
-USE projectmanagementDb;
+CREATE DATABASE IF NOT EXISTS projectmanagementdb;
+USE projectmanagementdb;
 
 CREATE TABLE users (
   user_id INT PRIMARY KEY AUTO_INCREMENT,
