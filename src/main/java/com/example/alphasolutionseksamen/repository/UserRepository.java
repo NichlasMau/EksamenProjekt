@@ -40,7 +40,7 @@ import java.util.List;
         User user = null;
 
         try (Connection con = connector.getConnection()) {
-            String SQL = "SELCT * FROM users WHERE user_id = ?;";
+            String SQL = "SELECT * FROM users WHERE user_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, userid);
             ResultSet rs = pstmt.executeQuery();
@@ -57,6 +57,28 @@ import java.util.List;
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    public User getUserEmail(String checkMail) {
+        User user = null;
+        try (Connection con = connector.getConnection())
+        {
+            String SQL = "SELECT * FROM users WHERE email = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setString(1, checkMail);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("user_id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                user = new User(id, name, email, username, password);
+            }
+            return user;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteUser(int userID) {
