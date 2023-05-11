@@ -1,6 +1,6 @@
 package com.example.alphasolutionseksamen.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Project {
 
@@ -9,10 +9,10 @@ public class Project {
     private String description;
     private String status;
     private double budget;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-    public Project(int project_id, String name, String description, String status, double budget, Date startDate, Date endDate) {
+    public Project(int project_id, String name, String description, String status, double budget, LocalDateTime startDate, LocalDateTime endDate) {
         this.project_id = project_id;
         this.name = name;
         this.description = description;
@@ -20,6 +20,9 @@ public class Project {
         this.budget = budget;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Project() {
     }
 
     public int getProject_id() {
@@ -62,19 +65,19 @@ public class Project {
         this.budget = budget;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 }

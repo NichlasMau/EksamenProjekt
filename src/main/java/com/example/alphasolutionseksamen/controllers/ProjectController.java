@@ -10,15 +10,14 @@ import com.example.alphasolutionseksamen.repository.TaskRepository;
 import com.example.alphasolutionseksamen.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -53,15 +52,43 @@ public class ProjectController {
         return "projects";
     }
 
+    @GetMapping("/create/project/{id}")
+    public String createProject(@PathVariable int id, Model model) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        return "projects";
+    }
+
+    @PostMapping("/create/project")
+    public String createProject(@RequestParam("name") String name,
+                                @RequestParam("description") String description,
+                                @RequestParam("status") String status,
+                                @RequestParam("budget") Double budget,
+                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
+                                @ModelAttribute("project") Project project,
+                                Model model) {
+        projectRepository.createProject(project);
+        return "redirect:/projects";
+    }
+
+
     /*
      CONTROLLER FOR SUBPROJECTS
     */
 
-    @GetMapping(path = "/subprojects")
-    public ResponseEntity<List<Subproject>> getSubProjects(){
+    @GetMapping(path = "/json/subprojects")
+    public ResponseEntity<List<Subproject>> getSubProjectsJSON(){
         List<Subproject> subprojects = subprojectRepository.getSubproject();
         return new ResponseEntity<>(subprojects, HttpStatus.OK);
     }
+
+    @GetMapping(path = "/subprojects")
+    public String getSubProjects(Model model, HttpSession session){
+        List<Subproject> subprojects = subprojectRepository.getSubproject();
+        model.addAttribute("subprojects", subprojects);
+        return "subprojects";
+    }
+
 
     /*
      CONTROLLER FOR TASKS

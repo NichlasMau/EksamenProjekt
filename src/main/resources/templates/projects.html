@@ -17,23 +17,63 @@
   <div class="container">
     <div class="row hidden-md-up">
       <div th:each="project : ${projects}" class="col-sm-3 mb-4">
-        <div class="card h-100 shadow border rounded-4" style="width: 18rem;">
-          <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title" th:text="${project.name}"></h5>
-            <p class="card-text" th:text="${project.description}"></p>
+        <a style="text-decoration: none; color: black" th:href="@{'/subprojects'}">
+          <div class="card h-100 shadow border rounded-4" style="width: 18rem; min-height: 303px;">
+            <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title" th:text="${project.name}"></h5>
+              <p class="card-text" th:text="${project.description}"></p>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
       <div class="col-sm-3 mb-4">
         <div class="card h-100 min-vh-75 shadow border rounded-4" style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
-          <a class="d-flex justify-content-center align-items-center h-100" style="text-decoration: none">
+          <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal" data-bs-target="#createProjectModal" style="text-decoration: none">
             <div class="col-lg-8 text-center">
               <i class="bi bi-plus-circle-fill" style="font-size: 5rem; color: #ffffff;"></i>
               <h4 style="color: white" >Create project</h4>
             </div>
           </a>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createProjectModalLabel">Create Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/create/project" method="post" th:object="${project}">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" class="form-control border border-primary">
+          </div>
+          <div>
+            <input type="hidden" name="status" th:value="todo" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Budget</label>
+            <input type="number" name="budget" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="datetime-local" name="endDate" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Create Project</button>
+          </div>
+
+        </form>
       </div>
     </div>
   </div>

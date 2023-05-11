@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ProjectRepository {
             pstmt.setString(3, project.getStatus());
             pstmt.setDouble(4, project.getBudget());
             pstmt.setDate(5, new java.sql.Date(new java.util.Date().getTime()));
-            pstmt.setDate(6, (Date) project.getEndDate());
+            pstmt.setTimestamp(6, Timestamp.valueOf(project.getEndDate()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -46,8 +48,8 @@ public class ProjectRepository {
                 String description = rs.getString("description");
                 String status = rs.getString("status");
                 Double budget = rs.getDouble("budget");
-                Date startDate = rs.getDate("start_date");
-                Date endDate = rs.getDate("end_date");
+                LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+                LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
                 projects.add(new Project(id, name, description, status, budget, startDate, endDate));
             }
             return projects;
