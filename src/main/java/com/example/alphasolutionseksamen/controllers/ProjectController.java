@@ -94,10 +94,17 @@ public class ProjectController {
      CONTROLLER FOR TASKS
     */
 
-    @GetMapping(path = "/tasks")
-    public ResponseEntity<List<Task>> getTasks(){
+    @GetMapping(path = "/json/tasks")
+    public ResponseEntity<List<Task>> getTasksJSON(){
         List<Task> tasks = taskRepository.getTasks();
         return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/tasks")
+    public String getTasks(Model model, HttpSession session){
+        List<Task> tasks = taskRepository.getTasks();
+        model.addAttribute("tasks", tasks);
+        return "tasks";
     }
 
     /*
