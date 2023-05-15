@@ -14,6 +14,7 @@
 </head>
 <body>
 
+
 <div class="container py-3">
   <div class="d-flex justify-content-between align-items-center">
     <div class="ml-auto">
@@ -23,16 +24,34 @@
 </div>
 
 
+
+
 <div class="py-5 ">
   <div class="container">
     <div class="row hidden-md-up">
       <div th:each="project : ${projects}" class="col-sm-3 mb-4">
-        <a style="text-decoration: none; color: black" th:href="@{'/subprojects'}">
+        <a style="text-decoration: none; color: black" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
           <div class="card h-100 shadow border rounded-4" style="width: 18rem; min-height: 303px;">
             <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title" th:text="${project.name}"></h5>
               <p class="card-text" th:text="${project.description}"></p>
+              <p class="card-text" th:text="${project.status}"></p>
+              <p class="card-text" th:text="${project.budget}"></p>
+              <p class="card-text" th:text="${project.endDate}"></p>
+              <div style="margin-top: 5px; margin-right: 15px">
+                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal"
+                   th:data-project-id="${project.project_id}"
+                   th:data-project-name="${project.name}"
+                   th:data-project-description="${project.description}"
+                   th:data-project-status="${project.status}"
+                   th:data-project-budget="${project.budget}"
+                   th:data-project-start-date="${project.startDate}"
+                   th:data-project-end-date="${project.endDate}">
+                  <i class="bi bi-pencil-square" style="color: white"></i>
+                </a>
+                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/project/' + ${project.project_id}}"><i class="bi bi-trash"></i></a>
+              </div>
             </div>
           </div>
         </a>
@@ -51,6 +70,7 @@
   </div>
 </div>
 
+
 <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -68,8 +88,13 @@
             <label class="form-label">Description</label>
             <input type="text" name="description" class="form-control border border-primary">
           </div>
-          <div>
-            <input type="hidden" name="status" th:value="todo" />
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select border border-primary" >
+              <option value="todo" selected>Todo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Budget</label>
@@ -82,10 +107,87 @@
           <div class="d-grid">
             <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Create Project</button>
           </div>
-
         </form>
       </div>
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/update/project" method="post">
+          <div>
+            <input type="hidden" name="project_id" id="editProjectId" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" id="editName" class="form-control border border-primary" >
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" id="editDescription" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" id="editStatus" class="form-select border border-primary" >
+              <option value="todo">Todo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Budget</label>
+            <input type="number" name="budget"  id="editBudget" class="form-control border border-primary">
+          </div>
+          <div>
+            <input type="hidden" name="startDate" id="editStartDate"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="datetime-local" name="endDate" id="editEndDate" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Update Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function editFormData(project) {
+    $('#editProjectId').val(project.project_id);
+    $('#editName').val(project.name);
+    $('#editDescription').val(project.description);
+    $('#editStatus option[value="' + project.status + '"]').prop('selected', true);
+    $('#editBudget').val(project.budget);
+    $('#editStartDate').val(project.startDate);
+    $('#editEndDate').val(project.endDate);
+  }
+
+
+  $(document).on('show.bs.modal', '#editProjectModal', function (event) {
+    var button = $(event.relatedTarget);
+    var project = {
+      project_id: button.data('project-id'),
+      name: button.data('project-name'),
+      description: button.data('project-description'),
+      status: button.data('project-status'),
+      budget: button.data('project-budget'),
+      startDate: button.data('project-start-date'),
+      endDate: button.data('project-end-date')
+    };
+    editFormData(project);
+  });
+
+
+</script>
 </body>
+

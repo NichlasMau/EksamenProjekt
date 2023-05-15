@@ -45,33 +45,6 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/projects")
-    public String getProjects(Model model, HttpSession session){
-        List<Project> projects = projectRepository.getProjects();
-        model.addAttribute("projects", projects);
-        return "projects";
-    }
-
-    @GetMapping("/create/project/{id}")
-    public String createProject(@PathVariable int id, Model model) {
-        Project project = new Project();
-        model.addAttribute("project", project);
-        return "projects";
-    }
-
-    @PostMapping("/create/project")
-    public String createProject(@RequestParam("name") String name,
-                                @RequestParam("description") String description,
-                                @RequestParam("status") String status,
-                                @RequestParam("budget") Double budget,
-                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
-                                @ModelAttribute("project") Project project,
-                                Model model) {
-        projectRepository.createProject(project);
-        return "redirect:/projects";
-    }
-
-
     /*
      CONTROLLER FOR SUBPROJECTS
     */
@@ -88,6 +61,69 @@ public class ProjectController {
         model.addAttribute("subprojects", subprojects);
         return "subprojects";
     }
+    @GetMapping(path = "/all/projects")
+    public String getAllProjects(Model model, HttpSession session){
+        List<Project> projects = projectRepository.getProjects();
+        model.addAttribute("projects", projects);
+        return "projects";
+    }
+
+
+    @GetMapping(path = "/projects")
+    public String getProjects(Model model, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        List<Project> projects = projectRepository.getUserProjects(user.getUser_id());
+        model.addAttribute("projects", projects);
+        model.addAttribute("updateProject", new Project());
+        return "projects";
+    }
+
+
+
+
+    @GetMapping("/create/project/{id}")
+    public String createProject(@PathVariable int id, Model model) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        return "projects";
+    }
+
+
+    @PostMapping("/create/project")
+    public String createProject(@RequestParam("name") String name,
+                                @RequestParam("description") String description,
+                                @RequestParam("status") String status,
+                                @RequestParam("budget") Double budget,
+                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
+                                @ModelAttribute("project") Project project,
+                                Model model,
+                                HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        projectRepository.createProject(project, user.getUser_id());
+        return "redirect:/projects";
+    }
+
+
+    @PostMapping("/update/project")
+    public String updateProject(@RequestParam("project_id") int project_id,
+                                @RequestParam("name") String name,
+                                @RequestParam("description") String description,
+                                @RequestParam("status") String status,
+                                @RequestParam("budget") Double budget,
+                                @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate,
+                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
+                                @ModelAttribute("project") Project project) {
+        projectRepository.updateProject(project);
+        return "redirect:/projects";
+    }
+
+
+    @GetMapping("/delete/project/{id}")
+    public String deleteProject(@PathVariable int id){
+        projectRepository.deleteProject(id);
+        return "redirect:/projects";
+    }
+
 
 
     /*
