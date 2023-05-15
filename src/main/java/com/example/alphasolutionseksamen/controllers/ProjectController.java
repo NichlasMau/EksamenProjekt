@@ -185,12 +185,66 @@ public class ProjectController {
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/tasks")
-    public String getTasks(Model model, HttpSession session){
-        List<Task> tasks = taskRepository.getTasks();
+    @GetMapping(path = "/{id}/tasks")
+    public String getTasks(Model model, HttpSession session, @PathVariable int id) {
+        User user = (User) session.getAttribute("user");
+        List<Task> tasks = taskRepository.getUserTasks(user.getUser_id(), id);
         model.addAttribute("tasks", tasks);
+        model.addAttribute("subproject_id", id);
+
+
         return "tasks";
     }
+
+
+    @GetMapping("/create/task/{id}")
+    public String createTask(@PathVariable int id, Model model) {
+        Task task = new Task();
+        model.addAttribute("task", task);
+        return "tasks";
+    }
+
+
+    @PostMapping("/create/task")
+    public String createTask(@RequestParam("subproject_id") int subproject_id,
+                             @RequestParam("name") String name,
+                             @RequestParam("description") String description,
+                             @RequestParam("status") String status,
+                             @RequestParam("budget") String budget,
+                             @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
+                             @RequestParam("estimated_time") Double estimated_time,
+                             @ModelAttribute("task") Task task,
+                             Model model,
+                             HttpSession session) {
+        task.setSubproject_id(subproject_id);
+        taskRepository.createTask(task);
+        return "redirect:/"+ subproject_id + "/tasks";
+    }
+
+
+    @PostMapping("/update/task")
+    public String updateTask(@RequestParam("task_id") int task_id,
+                             @RequestParam("subproject_id") int subproject_id,
+                             @RequestParam("name") String name,
+                             @RequestParam("description") String description,
+                             @RequestParam("status") String status,
+                             @RequestParam("budget") Double budget,
+                             @RequestParam("estimated_time") Double estimated_time,
+                             @RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate,
+                             @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
+                             @ModelAttribute("task") Task task) {
+        taskRepository.updateTask(task);
+        return "redirect:/" + subproject_id + "/tasks";
+    }
+
+
+    @GetMapping("/delete/task/{sp_id}/{id}")
+    public String deleteTask(@PathVariable int id, @PathVariable int sp_id){
+        taskRepository.deleteTask(id);
+        return "redirect:/" + sp_id + "/tasks";
+    }
+
+
 
     /*
      CONTROLLER FOR USERS

@@ -14,6 +14,7 @@
 </head>
 <body>
 
+
 <div class="container py-3">
   <div class="d-flex justify-content-between align-items-center">
     <div class="ml-auto">
@@ -21,6 +22,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="py-5 ">
   <div class="container">
@@ -35,6 +37,24 @@
               <p class="card-text" th:text="${task.status}"></p>
               <p class="card-text" th:text="${task.budget}"></p>
               <p class="card-text" th:text="${task.estimated_time}"></p>
+              <p class="card-text" th:text="${task.end_date}"></p>
+
+
+              <div style="margin-top: 5px; margin-right: 15px">
+                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editTaskModal"
+                   th:data-task-id="${task.task_id}"
+                   th:data-task-subproject-id="${task.subproject_id}"
+                   th:data-task-name="${task.name}"
+                   th:data-task-description="${task.description}"
+                   th:data-task-status="${task.status}"
+                   th:data-task-budget="${task.budget}"
+                   th:data-task-estimated_time="${task.estimated_time}"
+                   th:data-task-start-date="${task.start_date}"
+                   th:data-task-end-date="${task.end_date}">
+                  <i class="bi bi-pencil-square" style="color: white"></i>
+                </a>
+                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/task/' + ${task.subproject_id} + '/' + ${task.task_id}}"><i class="bi bi-trash"></i></a>
+              </div>
             </div>
           </div>
         </a>
@@ -53,6 +73,7 @@
   </div>
 </div>
 
+
 <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -61,7 +82,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/create/task" method="post" th:object="${task}">
+        <form action="/create/task" method="post">
+          <div>
+            <input type="hidden" name="subproject_id" th:value="${subproject_id}" />
+          </div>
           <div class="mb-3">
             <label class="form-label">Name</label>
             <input type="text" name="name" class="form-control border border-primary">
@@ -78,6 +102,10 @@
             <input type="number" name="budget" class="form-control border border-primary">
           </div>
           <div class="mb-3">
+            <label class="form-label">Estimated Time (in hours)</label>
+            <input type="number" name="estimated_time" class="  form-control border border-primary">
+          </div>
+          <div class="mb-3">
             <label class="form-label">Deadline</label>
             <input type="datetime-local" name="end_date" class="form-control border border-primary">
           </div>
@@ -85,9 +113,103 @@
             <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Add Task</button>
           </div>
 
+
         </form>
       </div>
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/update/task" method="post">
+          <div>
+            <input type="hidden" name="task_id" id="editTaskId" />
+          </div>
+          <div>
+            <input type="hidden" name="subproject_id" id="editSubprojectId" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" id="editName" class="form-control border border-primary" >
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" id="editDescription" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" id="editStatus" class="form-select border border-primary" >
+              <option value="todo">Todo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Budget</label>
+            <input type="number" name="budget"  id="editBudget" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Estimated Time (in hours)</label>
+            <input type="number" name="estimated_time"  id="editEstimated_time" class="form-control border border-primary">
+          </div>
+          <div>
+            <input type="hidden" name="start_date" id="editStartDate"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="datetime-local" name="end_date" id="editEndDate" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Update Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function editFormData(task) {
+    $('#editTaskId').val(task.task_id);
+    $('#editSubprojectId').val(task.subproject_id);
+    $('#editName').val(task.name);
+    $('#editDescription').val(task.description);
+    $('#editStatus option[value="' + task.status + '"]').prop('selected', true);
+    $('#editBudget').val(task.budget);
+    $('#editEstimated_time').val(task.estimated_time);
+    $('#editStartDate').val(task.start_date);
+    $('#editEndDate').val(task.end_date);
+  }
+
+
+  $(document).on('show.bs.modal', '#editTaskModal', function (event) {
+    var button = $(event.relatedTarget);
+    var task = {
+      task_id: button.data('task-id'),
+      subproject_id: button.data('task-subproject-id'),
+      name: button.data('task-name'),
+      description: button.data('task-description'),
+      status: button.data('task-status'),
+      budget: button.data('task-budget'),
+      estimated_time: button.data('task-estimated_time'),
+      start_date: button.data('task-start-date'),
+      end_date: button.data('task-end-date')
+    };
+    editFormData(task);
+  });
+
+
+</script>
+
+
 </body>
+
