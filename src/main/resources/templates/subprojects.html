@@ -14,6 +14,7 @@
 </head>
 <body>
 
+
 <div class="container py-3">
   <div class="d-flex justify-content-between align-items-center">
     <div class="ml-auto">
@@ -25,22 +26,40 @@
   <div class="container">
     <div class="row hidden-md-up">
       <div th:each="subproject : ${subprojects}" class="col-sm-3 mb-4">
-        <a style="text-decoration: none; color: black" th:href="@{'/tasks'}">
+        <a style="text-decoration: none; color: black" th:href="@{'/' + ${subproject.getSubproject_id()}+ '/tasks'}">
 
-        <div class="card h-100 shadow border rounded-4" style="width: 18rem;">
-          <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title" th:text="${subproject.name}"></h5>
-            <p class="card-text" th:text="${subproject.description}"></p>
-            <p class="card-text" th:text="${subproject.status}"></p>
-            <p class="card-text" th:text="${subproject.budget}"></p>
+
+          <div class="card h-100 shadow border rounded-4" style="width: 18rem;">
+            <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title" th:text="${subproject.name}"></h5>
+              <p class="card-text" th:text="${subproject.description}"></p>
+              <p class="card-text" th:text="${subproject.status}"></p>
+              <p class="card-text" th:text="${subproject.budget}"></p>
+              <p class="card-text" th:text="${subproject.endDate}"></p>
+
+
+              <div style="margin-top: 5px; margin-right: 15px">
+                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editSubprojectModal"
+                   th:data-subproject-id="${subproject.subproject_id}"
+                   th:data-subproject-project-id="${subproject.project_id}"
+                   th:data-subproject-name="${subproject.name}"
+                   th:data-subproject-description="${subproject.description}"
+                   th:data-subproject-status="${subproject.status}"
+                   th:data-subproject-budget="${subproject.budget}"
+                   th:data-subproject-start-date="${subproject.startDate}"
+                   th:data-subproject-end-date="${subproject.endDate}">
+                  <i class="bi bi-pencil-square" style="color: white"></i>
+                </a>
+                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/subproject/' + ${subproject.project_id} + '/' + ${subproject.subproject_id}}"><i class="bi bi-trash"></i></a>
+              </div>
+            </div>
           </div>
-        </div>
         </a>
       </div>
       <div class="col-sm-3 mb-4">
         <div class="card h-100 min-vh-75 shadow border rounded-4" style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
-          <a class="d-flex justify-content-center align-items-center h-100" style="text-decoration: none">
+          <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal" data-bs-target="#createSubProjectModal"  style="text-decoration: none">
             <div class="col-lg-8 text-center">
               <i class="bi bi-plus-circle-fill" style="font-size: 5rem; color: #ffffff;"></i>
               <h4 style="color: white" >Create subproject</h4>
@@ -51,4 +70,135 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="createSubProjectModal" tabindex="-1" aria-labelledby="createSubProjectModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createSubProjectModalLabel">Create Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/create/subproject" method="post" th:object="${subproject}">
+          <div>
+            <input type="hidden" name="project_id" th:value="${project_id}" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select border border-primary" >
+              <option value="todo" selected>Todo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Budget</label>
+            <input type="number" name="budget" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="datetime-local" name="endDate" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Create Subproject</button>
+          </div>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="editSubprojectModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/update/subproject" method="post">
+          <div>
+            <input type="hidden" name="subproject_id" id="editSubprojectId" />
+          </div>
+          <div>
+            <input type="hidden" name="project_id" id="editProjectId" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" id="editName" class="form-control border border-primary" >
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" name="description" id="editDescription" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" id="editStatus" class="form-select border border-primary" >
+              <option value="todo">Todo</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Budget</label>
+            <input type="number" name="budget"  id="editBudget" class="form-control border border-primary">
+          </div>
+          <div>
+            <input type="hidden" name="startDate" id="editStartDate"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Deadline</label>
+            <input type="datetime-local" name="endDate" id="editEndDate" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Update Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function editFormData(subproject) {
+    $('#editSubprojectId').val(subproject.subproject_id);
+    $('#editProjectId').val(subproject.project_id);
+    $('#editName').val(subproject.name);
+    $('#editDescription').val(subproject.description);
+    $('#editStatus option[value="' + subproject.status + '"]').prop('selected', true);
+    $('#editBudget').val(subproject.budget);
+    $('#editStartDate').val(subproject.startDate);
+    $('#editEndDate').val(subproject.endDate);
+  }
+
+
+  $(document).on('show.bs.modal', '#editSubprojectModal', function (event) {
+    var button = $(event.relatedTarget);
+    var subproject = {
+      subproject_id: button.data('subproject-id'),
+      project_id: button.data('subproject-project-id'),
+      name: button.data('subproject-name'),
+      description: button.data('subproject-description'),
+      status: button.data('subproject-status'),
+      budget: button.data('subproject-budget'),
+      startDate: button.data('subproject-start-date'),
+      endDate: button.data('subproject-end-date')
+    };
+    editFormData(subproject);
+  });
+</script>
 </body>
+
