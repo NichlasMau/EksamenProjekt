@@ -24,102 +24,13 @@ import java.util.List;
 public class ProjectController {
 
     ProjectRepository projectRepository;
-    SubprojectRepository subprojectRepository;
-    TaskRepository taskRepository;
-    UserRepository userRepository;
 
     public ProjectController() {
         projectRepository = new ProjectRepository();
-        subprojectRepository = new SubprojectRepository();
-        taskRepository = new TaskRepository();
-        userRepository = new UserRepository();
     }
-
-    /*
-     CONTROLLER FOR PROJECTS
-    */
-
-    @GetMapping(path = "/json/projects")
-    public ResponseEntity<List<Project>> getProjectsJSON(){
-        List<Project> projects = projectRepository.getProjects();
-        return new ResponseEntity<>(projects, HttpStatus.OK);
-    }
-
-    /*
-     CONTROLLER FOR SUBPROJECTS
-    */
-
-    @GetMapping(path = "/json/subprojects")
-    public ResponseEntity<List<Subproject>> getSubProjectsJSON(){
-        List<Subproject> subprojects = subprojectRepository.getSubproject();
-        return new ResponseEntity<>(subprojects, HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/all/subprojects")
-    public String getAllSubProjects(Model model, HttpSession session){
-        List<Subproject> subprojects = subprojectRepository.getSubproject();
-        model.addAttribute("subprojects", subprojects);
-        return "subprojects";
-    }
-
-
-    @GetMapping(path = "/{id}/subprojects")
-    public String getSubprojects(Model model, HttpSession session, @PathVariable int id) {
-        User user = (User) session.getAttribute("user");
-        List<Subproject> subprojects = subprojectRepository.getUserSubprojects(user.getUser_id(), id);
-        model.addAttribute("subprojects", subprojects);
-        model.addAttribute("project_id", id);
-        return "subprojects";
-    }
-
-    @GetMapping("/create/subproject/{id}")
-    public String createSubproject(@PathVariable int id, Model model) {
-        Subproject subproject = new Subproject();
-        model.addAttribute("subproject", subproject);
-        return "subprojects";
-    }
-
-    @PostMapping("/create/subproject")
-    public String createSubproject(@RequestParam("project_id") int project_id,
-                                   @RequestParam("name") String name,
-                                   @RequestParam("description") String description,
-                                   @RequestParam("status") String status,
-                                   @RequestParam("budget") Double budget,
-                                   @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
-                                   @ModelAttribute("subproject") Subproject subproject,
-                                   Model model,
-                                   HttpSession session) {
-        subproject.setProject_id(project_id);
-        subprojectRepository.createSubproject(subproject);
-        return "redirect:/"+ project_id + "/subprojects";
-    }
-
-    @PostMapping("/update/subproject")
-    public String updateSubproject(@RequestParam("subproject_id") int subproject_id,
-                                   @RequestParam("project_id") int project_id,
-                                   @RequestParam("name") String name,
-                                   @RequestParam("description") String description,
-                                   @RequestParam("status") String status,
-                                   @RequestParam("budget") Double budget,
-                                   @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate,
-                                   @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
-                                   @ModelAttribute("subproject") Subproject subproject) {
-        subprojectRepository.updateSubproject(subproject);
-        return "redirect:/" + project_id + "/subprojects";
-    }
-
-    @GetMapping("/delete/subproject/{p_id}/{id}")
-    public String deleteSubproject(@PathVariable int id, @PathVariable int p_id){
-        subprojectRepository.deleteSubproject(id);
-        return "redirect:/" + p_id + "/subprojects";
-    }
-
-
-
-
 
     @GetMapping(path = "/projects")
-    public String getProjects(Model model, HttpSession session){
+    public String getProjects(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         List<Project> projects = projectRepository.getUserProjects(user.getUser_id());
         model.addAttribute("projects", projects);
@@ -127,16 +38,12 @@ public class ProjectController {
         return "projects";
     }
 
-
-
-
     @GetMapping("/create/project/{id}")
     public String createProject(@PathVariable int id, Model model) {
         Project project = new Project();
         model.addAttribute("project", project);
         return "projects";
     }
-
 
     @PostMapping("/create/project")
     public String createProject(@RequestParam("name") String name,
@@ -152,7 +59,6 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
-
     @PostMapping("/update/project")
     public String updateProject(@RequestParam("project_id") int project_id,
                                 @RequestParam("name") String name,
@@ -166,116 +72,9 @@ public class ProjectController {
         return "redirect:/projects";
     }
 
-
     @GetMapping("/delete/project/{id}")
-    public String deleteProject(@PathVariable int id){
+    public String deleteProject(@PathVariable int id) {
         projectRepository.deleteProject(id);
         return "redirect:/projects";
-    }
-
-
-
-    /*
-     CONTROLLER FOR TASKS
-    */
-
-    @GetMapping(path = "/json/tasks")
-    public ResponseEntity<List<Task>> getTasksJSON(){
-        List<Task> tasks = taskRepository.getTasks();
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/{id}/tasks")
-    public String getTasks(Model model, HttpSession session, @PathVariable int id) {
-        User user = (User) session.getAttribute("user");
-        List<Task> tasks = taskRepository.getUserTasks(user.getUser_id(), id);
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("subproject_id", id);
-
-
-        return "tasks";
-    }
-
-
-    @GetMapping("/create/task/{id}")
-    public String createTask(@PathVariable int id, Model model) {
-        Task task = new Task();
-        model.addAttribute("task", task);
-        return "tasks";
-    }
-
-
-    @PostMapping("/create/task")
-    public String createTask(@RequestParam("subproject_id") int subproject_id,
-                             @RequestParam("name") String name,
-                             @RequestParam("description") String description,
-                             @RequestParam("status") String status,
-                             @RequestParam("budget") String budget,
-                             @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
-                             @RequestParam("estimated_time") Double estimated_time,
-                             @ModelAttribute("task") Task task,
-                             Model model,
-                             HttpSession session) {
-        task.setSubproject_id(subproject_id);
-        taskRepository.createTask(task);
-        return "redirect:/"+ subproject_id + "/tasks";
-    }
-
-
-    @PostMapping("/update/task")
-    public String updateTask(@RequestParam("task_id") int task_id,
-                             @RequestParam("subproject_id") int subproject_id,
-                             @RequestParam("name") String name,
-                             @RequestParam("description") String description,
-                             @RequestParam("status") String status,
-                             @RequestParam("budget") Double budget,
-                             @RequestParam("estimated_time") Double estimated_time,
-                             @RequestParam("start_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate,
-                             @RequestParam("end_date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate,
-                             @ModelAttribute("task") Task task) {
-        taskRepository.updateTask(task);
-        return "redirect:/" + subproject_id + "/tasks";
-    }
-
-
-    @GetMapping("/delete/task/{sp_id}/{id}")
-    public String deleteTask(@PathVariable int id, @PathVariable int sp_id){
-        taskRepository.deleteTask(id);
-        return "redirect:/" + sp_id + "/tasks";
-    }
-
-
-
-    /*
-     CONTROLLER FOR USERS
-    */
-
-    @GetMapping(path = "/users")
-    public ResponseEntity<List<User>> getUsers(){
-        List<User> users = userRepository.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @GetMapping("/")
-    public String homePage() {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestParam("email")String email, @RequestParam("pw") String pw,
-                        HttpSession session,
-                        Model model,
-                        HttpServletRequest request)
-    {
-        User user = userRepository.getUserEmail(email);
-        if (user != null) {
-            if (user.getPassword().equals(pw)) {
-                session.setAttribute("user", user);
-                session.setMaxInactiveInterval(30);
-                return "redirect:" + request.getContextPath() + "/projects";
-            }
-        }
-        model.addAttribute("wrongCredentials", true);
-        return "login";
     }
 }

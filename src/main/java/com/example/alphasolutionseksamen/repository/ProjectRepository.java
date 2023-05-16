@@ -17,31 +17,20 @@ import java.util.List;
 
 
 public class ProjectRepository {
-
-
     DBConnector connector;
 
-
     public void createProject(Project project, int givenUserId) {
-        try (Connection con = connector.getConnection())
-        {
+        try (Connection con = DBConnector.getConnection()) {
             String SQL = "INSERT INTO `projects` (`name`, `description`, `status`, `budget`, `start_date`, `end_date`) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement pstmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            PreparedStatement pstmt2 = con.prepareStatement(
-                    "INSERT INTO project_members (user_id, hourly_rate, project_id, role) VALUES (?, ?, ?, 'Administrator')");
-
-
+            PreparedStatement pstmt2 = con.prepareStatement("INSERT INTO project_members (user_id, hourly_rate, project_id, role) VALUES (?, ?, ?, 'Administrator')");
             pstmt.setString(1, project.getName());
             pstmt.setString(2, project.getDescription());
             pstmt.setString(3, project.getStatus());
             pstmt.setDouble(4, project.getBudget());
             pstmt.setDate(5, new java.sql.Date(new java.util.Date().getTime()));
             pstmt.setTimestamp(6, Timestamp.valueOf(project.getEndDate()));
-
-
             pstmt.executeUpdate();
-
-
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 rs.next();
                 int projectId = rs.getInt(1);
@@ -58,8 +47,7 @@ public class ProjectRepository {
 
     public List<Project> getUserProjects(int givenUserId) {
         List<Project> projects = new ArrayList<>();
-        try (Connection con = connector.getConnection())
-        {
+        try (Connection con = DBConnector.getConnection()) {
             String SQL = "SELECT * FROM projects p JOIN project_members pm ON p.project_id = pm.project_id WHERE pm.user_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, givenUserId);
@@ -80,43 +68,10 @@ public class ProjectRepository {
         }
     }
 
-
-
-
-
-
-
-
-    public List<Project> getProjects() {
-        List<Project> projects = new ArrayList<>();
-        try (Connection con = connector.getConnection())
-        {
-            String SQL = "SELECT * FROM projects;";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
-                int id = rs.getInt("project_id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                String status = rs.getString("status");
-                Double budget = rs.getDouble("budget");
-                LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
-                LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
-                projects.add(new Project(id, name, description, status, budget, startDate, endDate));
-            }
-            return projects;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     public void updateProject(Project project) {
-        try (Connection con = connector.getConnection()) {
+        try (Connection con = DBConnector.getConnection()) {
             String SQL = "UPDATE projects SET name = ?, description = ?, status = ?, budget = ?, start_date = ?, end_date = ? WHERE project_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
-
-
             pstmt.setString(1, project.getName());
             pstmt.setString(2, project.getDescription());
             pstmt.setString(3, project.getStatus());
@@ -124,21 +79,15 @@ public class ProjectRepository {
             pstmt.setTimestamp(5, Timestamp.valueOf(project.getStartDate()));
             pstmt.setTimestamp(6, Timestamp.valueOf(project.getEndDate()));
             pstmt.setInt(7, project.getProject_id());
-
-
             pstmt.executeUpdate();
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-
-
-    public void deleteProject (int projectId){
-        try(Connection con = connector.getConnection()) {
+    public void deleteProject(int projectId) {
+        try (Connection con = DBConnector.getConnection()) {
             String SQL = "DELETE FROM projects WHERE project_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, projectId);

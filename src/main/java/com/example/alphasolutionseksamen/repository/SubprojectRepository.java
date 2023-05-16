@@ -1,12 +1,6 @@
 package com.example.alphasolutionseksamen.repository;
-
-
-import com.example.alphasolutionseksamen.model.Project;
 import com.example.alphasolutionseksamen.model.Subproject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,11 +8,9 @@ import java.util.List;
 
 
 @Repository
-public class    SubprojectRepository {
-
+public class SubprojectRepository {
 
     DBConnector connector;
-
 
     public List<Subproject> getSubproject() {
         List<Subproject> subprojects = new ArrayList<>();
@@ -80,8 +72,6 @@ public class    SubprojectRepository {
             pstmt.setDouble(5, subprojects.getBudget());
             pstmt.setDate(6, new java.sql.Date(new java.util.Date().getTime()));
             pstmt.setTimestamp(7, Timestamp.valueOf(subprojects.getEndDate()));
-
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -92,8 +82,6 @@ public class    SubprojectRepository {
         try (Connection con = connector.getConnection()) {
             String SQL = "UPDATE subprojects SET name = ?, description = ?, status = ?, budget = ?, start_date = ?, end_date = ? WHERE subproject_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
-
-
             pstmt.setString(1, subproject.getName());
             pstmt.setString(2, subproject.getDescription());
             pstmt.setString(3, subproject.getStatus());
@@ -101,11 +89,7 @@ public class    SubprojectRepository {
             pstmt.setTimestamp(5, Timestamp.valueOf(subproject.getStartDate()));
             pstmt.setTimestamp(6, Timestamp.valueOf(subproject.getEndDate()));
             pstmt.setInt(7, subproject.getSubproject_id());
-
-
             pstmt.executeUpdate();
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -117,10 +101,6 @@ public class    SubprojectRepository {
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setInt(1, subprojectID);
             pstmt.executeUpdate();
-
-
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

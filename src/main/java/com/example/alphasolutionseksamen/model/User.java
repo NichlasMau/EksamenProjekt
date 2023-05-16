@@ -16,6 +16,12 @@ public class User {
         this.password = password;
     }
 
+    public User(int user_id, String name, String email, String username) {
+        this.user_id = user_id;
+        this.name = name;
+        this.email = email;
+        this.username = username;
+    }
 
     public User() {
     }
@@ -60,4 +66,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }
