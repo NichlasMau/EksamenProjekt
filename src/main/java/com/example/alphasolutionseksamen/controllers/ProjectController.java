@@ -4,10 +4,7 @@ import com.example.alphasolutionseksamen.model.Project;
 import com.example.alphasolutionseksamen.model.Subproject;
 import com.example.alphasolutionseksamen.model.Task;
 import com.example.alphasolutionseksamen.model.User;
-import com.example.alphasolutionseksamen.repository.ProjectRepository;
-import com.example.alphasolutionseksamen.repository.SubprojectRepository;
-import com.example.alphasolutionseksamen.repository.TaskRepository;
-import com.example.alphasolutionseksamen.repository.UserRepository;
+import com.example.alphasolutionseksamen.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,9 +21,12 @@ import java.util.List;
 public class ProjectController {
 
     ProjectRepository projectRepository;
+    ProjectMembersRepository projectMembersRepository;
+
 
     public ProjectController() {
         projectRepository = new ProjectRepository();
+        projectMembersRepository = new ProjectMembersRepository();
     }
 
     @GetMapping(path = "/projects")
@@ -35,6 +35,9 @@ public class ProjectController {
         List<Project> projects = projectRepository.getUserProjects(user.getUser_id());
         model.addAttribute("projects", projects);
         model.addAttribute("updateProject", new Project());
+        if(projectMembersRepository.userHasProject(user.getUser_id())) {
+            model.addAttribute("isAdmin", true);
+        }
         return "projects";
     }
 

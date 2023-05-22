@@ -54,21 +54,21 @@
                                    th:data-task-budget="${task.budget}"
                                    th:data-task-estimated_time="${task.estimated_time}"
                                    th:data-task-start-date="${task.start_date}"
-                                   th:data-task-end-date="${task.end_date}">
+                                   th:data-task-end-date="${task.end_date}" th:if="${isAdmin}">
                                     <i class="bi bi-pencil-square" style="color: white"></i>
                                 </a>
                                 <a class="btn btn-info bg-gradient" type="button" data-bs-toggle="modal"
                                    data-bs-target="#assignTaskModal"
-                                   th:data-task-id="${task.task_id}"><i class="bi bi-person-add"></i></a>
+                                   th:data-task-id="${task.task_id}" th:if="${isAdmin}"><i class="bi bi-person-add"></i></a>
                                 <a class="btn btn-danger bg-gradient" type="button"
-                                   th:href="@{'/delete/task/' + ${task.subproject_id} + '/' + ${task.task_id}}"><i
+                                   th:href="@{'/delete/task/' + ${task.subproject_id} + '/' + ${task.task_id}}" th:if="${isAdmin}"><i
                                         class="bi bi-trash"></i></a>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-sm-3 mb-4">
+            <div class="col-sm-3 mb-4" th:if="${isAdmin}">
                 <div class="card h-100 min-vh-75 shadow border rounded-4"
                      style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
                     <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal"

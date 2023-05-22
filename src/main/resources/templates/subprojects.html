@@ -48,16 +48,16 @@
                    th:data-subproject-status="${subproject.status}"
                    th:data-subproject-budget="${subproject.budget}"
                    th:data-subproject-start-date="${subproject.startDate}"
-                   th:data-subproject-end-date="${subproject.endDate}">
+                   th:data-subproject-end-date="${subproject.endDate}" th:if="${isAdmin}">
                   <i class="bi bi-pencil-square" style="color: white"></i>
                 </a>
-                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/subproject/' + ${subproject.project_id} + '/' + ${subproject.subproject_id}}"><i class="bi bi-trash"></i></a>
+                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/subproject/' + ${subproject.project_id} + '/' + ${subproject.subproject_id}}" th:if="${isAdmin}"><i class="bi bi-trash"></i></a>
               </div>
             </div>
           </div>
         </a>
       </div>
-      <div class="col-sm-3 mb-4">
+      <div class="col-sm-3 mb-4" th:if="${isAdmin}">
         <div class="card h-100 min-vh-75 shadow border rounded-4" style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
           <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal" data-bs-target="#createSubProjectModal"  style="text-decoration: none">
             <div class="col-lg-8 text-center">

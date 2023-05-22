@@ -15,6 +15,44 @@ import java.util.List;
 public class ProjectMembersRepository {
     DBConnector connector;
 
+    public List<Project> getUserProjects(int givenUserId) {
+        List<Project> projects = new ArrayList<>();
+        try (Connection con = DBConnector.getConnection()) {
+            String SQL = "SELECT * FROM projects p JOIN project_members pm ON p.project_id = pm.project_id WHERE pm.user_id = ?";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, givenUserId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("project_id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String status = rs.getString("status");
+                Double budget = rs.getDouble("budget");
+                LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+                LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
+                projects.add(new Project(id, name, description, status, budget, startDate, endDate));
+            }
+            return projects;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean userHasProject(int userId) {
+        try (Connection con = connector.getConnection()){
+            String SQl = "SELECT COUNT(*) FROM project_members WHERE user_id = ? AND role = 'Administrator';";
+            PreparedStatement pstmt = con.prepareStatement(SQl, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void assignUserProject(Project_members projectMember) {
         try (Connection con = connector.getConnection()){

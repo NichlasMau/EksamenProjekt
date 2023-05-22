@@ -2,6 +2,7 @@ package com.example.alphasolutionseksamen.controllers;
 
 import com.example.alphasolutionseksamen.model.Task;
 import com.example.alphasolutionseksamen.model.User;
+import com.example.alphasolutionseksamen.repository.ProjectMembersRepository;
 import com.example.alphasolutionseksamen.repository.TaskRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,9 +18,11 @@ import java.util.List;
 @Controller
 public class TaskController {
     TaskRepository taskRepository;
+    ProjectMembersRepository projectMembersRepository;
 
     public TaskController() {
         taskRepository = new TaskRepository();
+        projectMembersRepository = new ProjectMembersRepository();
     }
 
     @GetMapping(path = "/{id}/tasks")
@@ -29,8 +32,10 @@ public class TaskController {
         List<User> assigned_users = taskRepository.getTaskUsers(id);
         model.addAttribute("tasks", tasks);
         model.addAttribute("subproject_id", id);
-        System.out.println(assigned_users);
         model.addAttribute("assigned_users", assigned_users);
+        if(projectMembersRepository.userHasProject(user.getUser_id())) {
+            model.addAttribute("isAdmin", true);
+        }
         return "tasks";
     }
 

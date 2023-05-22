@@ -40,7 +40,7 @@
               <p class="card-text" th:text="${project.budget}"></p>
               <p class="card-text" th:text="${project.endDate}"></p>
               <div style="margin-top: 5px; margin-right: 15px">
-                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal"
+                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal" th:if="${isAdmin}"
                    th:data-project-id="${project.project_id}"
                    th:data-project-name="${project.name}"
                    th:data-project-description="${project.description}"
@@ -50,16 +50,24 @@
                    th:data-project-end-date="${project.endDate}">
                   <i class="bi bi-pencil-square" style="color: white"></i>
                 </a>
-                <a class="btn btn-info bg-gradient" type="button" data-bs-toggle="modal"
-                   data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}"
-                ><i class="bi bi-person-add"></i></a>
-                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/project/' + ${project.project_id}}"><i class="bi bi-trash"></i></a>
+                <a class="btn btn-dark bg-gradient" type="button" data-bs-toggle="modal"
+                   data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}"
+                >
+                  <i class="bi bi-person-add"></i></a>
+
+                <a class="btn btn-dark bg-gradient" type="button" data-bs-toggle="modal"
+                   data-bs-target="#assignCustomerModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}"
+                >
+                  <i class="bi bi-person-plus"></i></a>
+
+
+                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/project/' + ${project.project_id}}" th:if="${isAdmin}"><i class="bi bi-trash"></i></a>
               </div>
             </div>
           </div>
         </a>
       </div>
-      <div class="col-sm-3 mb-4">
+      <div class="col-sm-3 mb-4" th:if="${isAdmin}">
         <div class="card h-100 min-vh-75 shadow border rounded-4" style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
           <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal" data-bs-target="#createProjectModal" style="text-decoration: none">
             <div class="col-lg-8 text-center">
@@ -106,6 +114,42 @@
             <button class="btn p-2 m-1"
                     style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);"
                     type="submit">Assign User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="assignCustomerModal" tabindex="-1" aria-labelledby="assignCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignCustomerModalLabel">Add Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/assignCustomer/project" method="post">
+          <div>
+            <input type="hidden" name="project_id" id="assignCustomerId"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Company name</label>
+            <input type="name" name="name" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone nr.</label>
+            <input type="tel" name="phone" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn p-2 m-1"
+                    style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);"
+                    type="submit">Add customer
             </button>
           </div>
         </form>

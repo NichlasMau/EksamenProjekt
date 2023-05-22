@@ -3,6 +3,7 @@ package com.example.alphasolutionseksamen.controllers;
 import com.example.alphasolutionseksamen.model.Project;
 import com.example.alphasolutionseksamen.model.Subproject;
 import com.example.alphasolutionseksamen.model.User;
+import com.example.alphasolutionseksamen.repository.ProjectMembersRepository;
 import com.example.alphasolutionseksamen.repository.SubprojectRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,9 +19,11 @@ import java.util.List;
 @Controller
 public class SubprojectController {
     SubprojectRepository subprojectRepository;
+    ProjectMembersRepository projectMembersRepository;
 
     public SubprojectController() {
         subprojectRepository = new SubprojectRepository();
+        projectMembersRepository = new ProjectMembersRepository();
     }
 
     @GetMapping(path = "/{id}/subprojects")
@@ -29,6 +32,9 @@ public class SubprojectController {
         List<Subproject> subprojects = subprojectRepository.getUserSubprojects(user.getUser_id(), id);
         model.addAttribute("subprojects", subprojects);
         model.addAttribute("project_id", id);
+        if(projectMembersRepository.userHasProject(user.getUser_id())) {
+            model.addAttribute("isAdmin", true);
+        }
         return "subprojects";
     }
 
