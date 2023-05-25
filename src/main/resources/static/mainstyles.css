@@ -1,0 +1,161 @@
+html,
+body {
+    height: 100%;
+    background-color: #0d1c7a;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-copyright {
+    color: white;
+}
+
+/* Hero Section */
+
+#hero-section {
+    background: linear-gradient(0deg, rgba(13,28,122,1) 40%, rgba(0,0,0,1) 100%);
+    text-align: center;
+    color: #fff;
+    padding-bottom: 200px;
+}
+
+
+#hero-left-section {
+    padding: 0 50px;
+}
+
+#hero-left-section h1 {
+    padding: 0 20px;
+}
+
+#hero-right-section {
+    background-image: url(../img/blob.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    height: 600px;
+    width: 600px;
+}
+
+#hero-right-section img {
+    padding-top: 20%;
+}
+
+/* Hero Section End */
+
+/* Brand Section */
+
+#brand-section {
+    margin-top: -5%;
+    text-align: center;
+    color: #fff;
+}
+
+
+/* Brand Section End */
+
+
+/* Pricing Section */
+
+#pricing-section {
+    color: #fff;
+}
+
+#pricing-section ul {
+    list-style-type: none;
+    padding-left: 1%;
+}
+
+#pricing-section .card-body .btn {
+    margin-top: 8%;
+    background-image: linear-gradient(0deg, rgba(0,0,0,1) 10%, rgba(13,28,122,1) 80%);
+    border-color: black;
+    padding: 8px 40px;
+}
+
+#pricing-section .card-body {
+    padding: 50px;
+    background-color: #041562;
+    border-radius: 50px;
+    box-shadow:  5px 5px 20px #181818;
+}
+
+
+/* Pricing Section End */
+
+/* Great Section */
+
+#great-section {
+    color: #fff;
+}
+
+
+/* Great Section End*/
+
+
+/* Team Section */
+
+#teamSection {
+    color: white;
+    height: 100vh;
+    padding-top: 10%;
+}
+
+#teamSection h1 {
+    font-size: 40px;
+}
+
+.team-section img {
+    margin-top: 10%;
+    height: 250px;
+}
+
+/* Team Section End */
+
+
+
+/* ---------- Index End ---------- */
+
+
+/* Project Site */
+
+
+/* ---------- Dashboard Section ---------- */
+
+#DashMenu .nav-link {
+    color: white;
+}
+
+#DashMenu .submenu-dash {
+    color:bisque;
+}
+
+#DashMenu {
+    background-color: #181818;
+}
+
+#profileButton {
+    margin-top: 430px;
+}
+
+
+/* ---------- Dashboard Section End ---------- */
+
+/* ---------- Project Site ---------- */
+
+#projectCard {
+    background: linear-gradient(0deg, rgba(13,28,122,1) 40%, rgba(0,0,0,1) 100%);
+    height: 100vh;
+}
+
+#projectCard .card-img-top {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+#projectCard .testText {
+    color: white;
+    padding: 20px;
+}
+
+/* ---------- Project Site End ---------- */
+
