@@ -1,7 +1,5 @@
-CREATE
-DATABASE IF NOT EXISTS projectmanagementdb;
-	USE
-projectmanagementdb;
+CREATE DATABASE IF NOT EXISTS projectmanagementdb;
+USE projectmanagementdb;
 
 CREATE TABLE users
 (
