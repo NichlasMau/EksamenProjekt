@@ -32,7 +32,6 @@
       <div th:each="project : ${projects}" class="col-sm-3 mb-4">
         <a style="text-decoration: none; color: black" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
           <div class="card h-100 shadow border rounded-4" style="width: 18rem; min-height: 303px;">
-            <img class="card-img-top" src="https://www.unfe.org/wp-content/uploads/2019/04/SM-placeholder.png" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title" th:text="${project.name}"></h5>
               <p class="card-text" th:text="${project.description}"></p>
@@ -130,24 +129,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/assignCustomer/project" method="post">
+        <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <form id="assignCustomerForm" method="post">
           <div>
             <input type="hidden" name="project_id" id="assignCustomerId"/>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Company name</label>
-            <input type="name" name="name" class="form-control border border-primary">
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
             <input type="email" name="email" class="form-control border border-primary">
           </div>
-          <div class="mb-3">
-            <label class="form-label">Phone nr.</label>
-            <input type="tel" name="phone" class="form-control border border-primary">
-          </div>
           <div class="d-grid">
-            <button class="btn p-2 m-1"
+            <button id="addCustomerButton" class="btn p-2 m-1"
                     style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);"
                     type="submit">Add customer
             </button>
@@ -157,6 +149,7 @@
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
@@ -264,10 +257,16 @@
     var button = $(event.relatedTarget);
     project_id = button.data('project-id');
     $('#assignProjectId').val(project_id);
-
   });
 
-    $(document).on('show.bs.modal', '#editProjectModal', function (event) {
+  $(document).on('show.bs.modal', '#assignCustomerModal', function (event) {
+    var button = $(event.relatedTarget);
+    project_id = button.data('project-id');
+    $('#assignCustomerId').val(project_id);
+  });
+
+
+  $(document).on('show.bs.modal', '#editProjectModal', function (event) {
     var button = $(event.relatedTarget);
     var project = {
       project_id: button.data('project-id'),
@@ -280,6 +279,34 @@
     };
     editFormData(project);
   });
+
+  $(document).ready(function() {
+    $('#assignCustomerForm').submit(function(event) {
+      event.preventDefault();
+
+      var formData = $(this).serialize();
+      $.ajax({
+        type: 'POST',
+        url: '/assignCustomer/project',
+        data: formData,
+        success: function(result) {
+          if (result === 'SUCCESS') {
+            $('#assignCustomerModal').modal('hide');
+            window.location.reload();
+          } else {
+            $('#errorMessage').text(result);
+            $('#errorMessage').show();
+          }
+        },
+        error: function() {
+          $('#errorMessage').text('Email not found!');
+          $('#errorMessage').show();
+        }
+      });
+    });
+  });
+
+
 
 
 </script>

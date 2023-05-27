@@ -39,10 +39,10 @@ VALUES (1, 50.00, 1, "Administrator"),
        (3, 100.00, 2, "Developer");
 
 
-INSERT INTO customers (name, email, phone)
-VALUES ('ABC Corporation', 'abccorp@example.com', '123-456-7890'),
-       ('XYZ LLC', 'xyzllc@example.com', '555-555-5555'),
-       ('Acme Inc', 'acmeinc@example.com', NULL);
+INSERT INTO customers (name, email, password, phone)
+VALUES ('ABC Corporation', 'abccorp@example.com', 'password123', '24410106'),
+       ('XYZ LLC', 'xyzllc@example.com', 'password123', '30832591'),
+       ('Acme Inc', 'acmeinc@example.com', 'password123', '50514395');
 
 
 INSERT INTO project_customers (customer_id, project_id)

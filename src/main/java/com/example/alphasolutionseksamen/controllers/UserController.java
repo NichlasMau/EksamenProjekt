@@ -1,5 +1,7 @@
 package com.example.alphasolutionseksamen.controllers;
 
+import com.example.alphasolutionseksamen.enums.customerEnum;
+import com.example.alphasolutionseksamen.enums.userEnum;
 import com.example.alphasolutionseksamen.model.User;
 import com.example.alphasolutionseksamen.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("email") String email, @RequestParam("pw") String pw,
+    public ResponseEntity<String> login(@RequestParam("email") String email, @RequestParam("pw") String pw,
                         HttpSession session,
                         Model model,
                         HttpServletRequest request) {
@@ -32,11 +34,13 @@ public class UserController {
             if (user.getPassword().equals(pw)) {
                 session.setAttribute("user", user);
                 session.setMaxInactiveInterval(600);
-                return "redirect:" + request.getContextPath() + "/projects";
+                return ResponseEntity.ok("SUCCESS");
+            } else {
+                return ResponseEntity.badRequest().body("User not found");
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
-        model.addAttribute("wrongCredentials", true);
-        return "login";
     }
 
 }
