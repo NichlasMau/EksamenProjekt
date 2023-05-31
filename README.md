@@ -11,6 +11,11 @@ View our project live on Render: [https://projectmanagementproject.onrender.com/
 | ------------- | ------------- |
 | johndoe@example.com  | password123  |
 
+### Test Login (Customer)
+| Email  | Password |
+| ------------- | ------------- |
+| abccorp@example.com  | password123  |
+
 
 
 ## Installation
