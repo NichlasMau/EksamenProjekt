@@ -1,6 +1,15 @@
 # Eksamensprojekt (Projectmanagement)
 A projectmangement tool made for Alpha Solutions to help organize projects.
 
+## Live Demo
+View our project live on Render: [https://projectmanagementproject.onrender.com/](https://projectmanagementproject.onrender.com/)
+
+### Test Login (User)
+| Email  | Password |
+| ------------- | ------------- |
+| johndoe@example.com  | password  |
+
+
 
 ## Installation
 
