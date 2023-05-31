@@ -1,0 +1,392 @@
+body {
+    background-color: #1A1B20;
+    margin-bottom: 2rem;
+}
+
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+
+
+
+.breadcrumb li a {
+    font-size: 1.8rem;
+    color: white;
+    text-decoration: none;
+}
+
+
+.project_stats {
+    color: white;
+    margin-bottom: 2rem;
+}
+
+
+.project_stats h4 {
+    margin-bottom: 1rem;
+}
+
+
+
+
+.progress {
+    height: 2rem;
+    background-color: #1E2128;
+}
+
+
+.progress-bar {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+
+.progress-budget {
+    background:  linear-gradient(109.6deg, rgb(0, 204, 130) 11.2%, rgb(58, 181, 46) 91.7%);
+}
+
+
+.progress-time {
+    background-color: #2a2a72;
+    background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
+}
+
+
+.breadcrumb li {
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+
+.top_bar {
+    margin-top: 2rem;
+}
+
+
+.breadcrumb {
+    z-index: 100;
+}
+
+
+.user_nav {
+    font-size: 1.2em;
+    color: white;
+    text-decoration: none;
+    margin: 4rem;
+}
+
+
+.user_nav:hover{
+    color: rgb(230, 230, 230);
+}
+
+
+.project_create {
+    background-color: #1a9ee5;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.6rem 1rem 0.6rem 1rem;
+    text-decoration: none;
+    border-radius: 0.6rem;
+}
+
+
+.project_create i {
+    font-size: 1.3em;
+    vertical-align: middle;
+    margin-right: 0.4em;
+}
+
+
+
+
+.project_create:hover {
+    background-color: #1a9ee5;
+    color: white;
+}
+
+
+
+
+.project_title {
+    text-decoration: none;
+    color: white;
+}
+
+
+.status_title {
+    text-decoration: none;
+    color: white;
+    margin-bottom: 0.8em;
+}
+
+
+.project_card {
+    background-color: #1E2128;
+    color: white;
+    position: relative;
+    margin-bottom: 1rem;
+
+
+
+
+    padding: 0rem 1.5rem 1.5rem 1.5rem;
+    border-radius: 0.8rem;
+
+
+    width: 24rem;
+    min-height: 13rem;
+
+
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
+
+
+    transition: box-shadow 0.3s ease-in-out;
+
+
+    transition: all .2s ease-in-out;
+}
+
+
+.project_card:hover {
+    box-shadow: 0px 0px 6px 6px rgba(0, 0, 0, 0.07);
+    transform: scale(1.02);
+    z-index:1;
+}
+
+
+.table {
+    color: white;
+}
+
+
+.project_view {
+    float: right;
+    display: block;
+    cursor: pointer;
+}
+
+
+.project_view i {
+    font-size: 1.5rem;
+    color: #1a9ee5;
+}
+
+
+.table-responsive {
+    margin-bottom: 2rem;
+}
+
+
+.progress-label-container{
+    position: relative;
+}
+
+
+.progress-label{
+    position: absolute;
+    right: 2%;
+    top: 15%;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+
+.project_status {
+    border-radius: 1rem;
+    padding: 0.2em;
+    width: 5rem;
+    text-align: center;
+    font-weight: 600;
+    float: right;
+    padding: 3px;
+
+
+}
+
+
+.no_tasks {
+    color: #bbbbbb;
+    font-weight: 400;
+}
+
+
+.status-todo {
+    background-color: rgba(255, 64, 64, 0.88);
+}
+
+
+.status-doing {
+    background-color: rgba(254, 204, 73, 0.88);
+}
+
+
+.status-done {
+    background-color: rgba(52, 255, 128, 0.88);
+}
+
+
+.project_card_top {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    margin-bottom: 0;
+    color: white;
+    width: 14em;
+    height: auto;
+}
+
+
+.project_card_bottom {
+    position: absolute;
+    bottom: 3rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.project_card_bottom2 {
+    bottom: 0.5rem;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    float: right;
+}
+
+
+.project_budget {
+    background-color: rgba(66, 184, 126, 0.88);
+    border-radius: 1rem;
+    padding: 0.2em 1em 0.2em 0.5em;
+    text-align: center;
+    font-weight: 600;
+    margin: 0;
+
+
+}
+
+
+.project_budget i {
+    padding: 0.5em;
+}
+
+
+.project_date {
+    background-color: rgba(23, 23, 23, 0.88);
+    border-radius: 1rem;
+    padding: 0.2em 1em 0.2em 1em;
+    text-align: center;
+    font-weight: 600;
+    margin: 0;
+
+
+}
+
+
+.project_date i {
+    padding: 0.5em;
+}
+
+
+.project_dropdown {
+    padding-top: 0.5rem;
+    height: 3rem;
+    z-index: 99;
+}
+
+
+.project_dropdown_btn {
+    font-size: 1.5rem;
+    float: right;
+    color: white;
+    cursor: pointer;
+}
+
+
+.project_dropdown_btn:hover {
+    color: white;
+}
+
+
+/* Modal design (dark) */
+
+
+.dark-mode-content {
+    background-color: #1A1B20;
+    color: #fff;
+}
+
+
+.dark-mode-input {
+    background-color: #1E2128;
+    color: #fff;
+    border: none;
+}
+
+
+.dark-mode-input:focus {
+    background-color: #1E2128;
+    color: white;
+}
+
+
+.dark-mode-input i {
+    color: #fff;
+}
+
+
+.dark-mode-button {
+    color: #fff;
+    background-color: #1a9ee5;
+}
+
+
+.dark-mode-button:hover {
+    background-color: #1a9ee5;
+}
+
+
+.dark-mode-dropdown {
+    background-color: #1A1B20;
+    color: #fff;
+    border-color: rgb(42, 42, 42);
+    z-index: 99;
+}
+
+
+.project_dropdown_btn {
+    color: #fff;
+}
+
+
+.project_dropdown_btn:hover {
+    color: #fff;
+}
+
+
+.dropdown-menu.dark-mode-dropdown li a.dropdown-item {
+    color: #fff;
+}
+
+
+.dropdown-menu.dark-mode-dropdown li a.dropdown-item:hover {
+    color: #fff;
+    background-color: #27282f;
+}
+
+
+.dropdown-item i {
+    margin-right: 0.5em;
+}
+
+
+

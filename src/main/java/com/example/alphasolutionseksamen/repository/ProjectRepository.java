@@ -2,12 +2,10 @@ package com.example.alphasolutionseksamen.repository;
 
 
 import com.example.alphasolutionseksamen.model.Project;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.List;
 
 public class ProjectRepository {
     DBConnector connector;
+
 
     public void createProject(Project project, int givenUserId) {
         try (Connection con = DBConnector.getConnection()) {
@@ -34,8 +33,8 @@ public class ProjectRepository {
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 rs.next();
                 int projectId = rs.getInt(1);
-                pstmt2.setInt(1, givenUserId); // User id 1
-                pstmt2.setFloat(2, 0); // Hourly rate
+                pstmt2.setInt(1, givenUserId);
+                pstmt2.setFloat(2, 0);
                 pstmt2.setInt(3, projectId);
                 pstmt2.executeUpdate();
             }
@@ -45,8 +44,8 @@ public class ProjectRepository {
     }
 
 
-    public List<Project> getUserProjects(int givenUserId) {
-        List<Project> projects = new ArrayList<>();
+    public List < Project > getUserProjects(int givenUserId) {
+        List < Project > projects = new ArrayList < > ();
         try (Connection con = DBConnector.getConnection()) {
             String SQL = "SELECT * FROM projects p JOIN project_members pm ON p.project_id = pm.project_id WHERE pm.user_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
@@ -67,6 +66,31 @@ public class ProjectRepository {
             throw new RuntimeException(e);
         }
     }
+
+
+    public List < Project > getCustomerProjects(int givenCustomerId) {
+        List < Project > projects = new ArrayList < > ();
+        try (Connection con = DBConnector.getConnection()) {
+            String SQL = "SELECT * FROM projects p JOIN project_customers pm ON p.project_id = pm.project_id WHERE pm.customer_id = ?";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, givenCustomerId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("project_id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                String status = rs.getString("status");
+                Double budget = rs.getDouble("budget");
+                LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+                LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
+                projects.add(new Project(id, name, description, status, budget, startDate, endDate));
+            }
+            return projects;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void updateProject(Project project) {
         try (Connection con = DBConnector.getConnection()) {
@@ -99,4 +123,6 @@ public class ProjectRepository {
 
 
 }
+
+
 

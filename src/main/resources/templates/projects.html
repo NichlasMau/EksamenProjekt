@@ -6,72 +6,215 @@
   <title>Alpha Solutions - Projects</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.6.4.js"
-          integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-          crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <link rel="stylesheet" th:href="@{header-footer.css}">
+  <link rel="stylesheet" th:href="@{projects.css}">
 </head>
 <body>
-
-
-<div class="container py-3">
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="ml-auto">
-      <h3>Projects</h3>
+<div class="container-fluid" style="padding: 0 80px;">
+  <nav class="navbar navbar-expand-md">
+    <a class="navbar-brand">
+      <img src="img/alphasolutions-logo.png" alt="Header-Logo" height="250px" width="250px" />
+    </a>
+    <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="dropdown-toggle user_nav" th:text="${username}" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+          <ul class="dropdown-menu dark-mode-dropdown">
+            <li>
+              <a class="dropdown-item" th:href="@{'/logout'}">
+                <i class="bi bi-box-arrow-left"></i>Logout </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="py-5">
+  <div class="container top_bar">
+    <div class="d-flex justify-content-between">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a th:href="@{/projects}">Projects</a>
+          </li>
+        </ol>
+      </nav>
+      <a th:if="${isUser}" class="project_create d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+        <i class="bi bi-file-earmark-plus"></i>Create Project </a>
     </div>
   </div>
 </div>
-
-
-
-
-<div class="py-5 ">
-  <div class="container">
-    <div class="row hidden-md-up">
-      <div th:each="project : ${projects}" class="col-sm-3 mb-4">
-        <a style="text-decoration: none; color: black" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
-          <div class="card h-100 shadow border rounded-4" style="width: 18rem; min-height: 303px;">
-            <div class="card-body">
-              <h5 class="card-title" th:text="${project.name}"></h5>
-              <p class="card-text" th:text="${project.description}"></p>
-              <p class="card-text" th:text="${project.status}"></p>
-              <p class="card-text" th:text="${project.budget}"></p>
-              <p class="card-text" th:text="${project.endDate}"></p>
-              <div style="margin-top: 5px; margin-right: 15px">
-                <a class="btn btn-warning bg-gradient" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal" th:if="${isAdmin}"
-                   th:data-project-id="${project.project_id}"
-                   th:data-project-name="${project.name}"
-                   th:data-project-description="${project.description}"
-                   th:data-project-status="${project.status}"
-                   th:data-project-budget="${project.budget}"
-                   th:data-project-start-date="${project.startDate}"
-                   th:data-project-end-date="${project.endDate}">
-                  <i class="bi bi-pencil-square" style="color: white"></i>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h4 class="status_title">To do</h4>
+      <div class="status-container">
+        <div th:if="${#lists.isEmpty(projects)}" class="project-card">
+          <h5 class="no_tasks">No projects found</h5>
+        </div>
+        <div th:each="project : ${projects}" th:if="${project.status == 'todo'}" class="project-card">
+          <a th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+            <div class="project_card">
+              <div class="project_card_top">
+                <h5 th:text="${project.name}"></h5>
+                <p th:text="${project.description}"></p>
+              </div>
+              <div class="project_dropdown">
+                <a class="project_dropdown_btn" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots"></i>
                 </a>
-                <a class="btn btn-dark bg-gradient" type="button" data-bs-toggle="modal"
-                   data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}"
-                >
-                  <i class="bi bi-person-add"></i></a>
-
-                <a class="btn btn-dark bg-gradient" type="button" data-bs-toggle="modal"
-                   data-bs-target="#assignCustomerModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}"
-                >
-                  <i class="bi bi-person-plus"></i></a>
-
-
-                <a class="btn btn-danger bg-gradient" type="button" th:href="@{'/delete/project/' + ${project.project_id}}" th:if="${isAdmin}"><i class="bi bi-trash"></i></a>
+                <ul class="dropdown-menu dark-mode-dropdown">
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal" th:if="${isAdmin}" th:data-project-id="${project.project_id}" th:data-project-name="${project.name}" th:data-project-description="${project.description}" th:data-project-status="${project.status}" th:data-project-budget="${project.budget}" th:data-project-start-date="${project.startDate}" th:data-project-end-date="${project.endDate}">
+                      <i class="bi bi-pen"></i> Edit project
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}">
+                      <i class="bi bi-person-add"></i> Assign User
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignCustomerModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}">
+                      <i class="bi bi-building-add"></i> Invite Customer
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" th:href="@{'/delete/project/' + ${project.project_id}}" th:if="${isAdmin}">
+                      <i class="bi bi-trash3"></i> Delete project
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <p class="project_status" th:classappend="${'status-' + project.status.toLowerCase()}" th:text="${#strings.capitalize(project.status)}"></p>
+              <div class="project_card_bottom">
+                <p class="project_budget" >
+                  <i class="bi bi-cash"></i>
+                  <th:block th:text="${project.getFormattedBudget()}"></th:block>
+                </p>
+                <p class="project_date">
+                  <i class="bi bi-calendar3"></i>
+                  <th:block th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></th:block>
+                </p>
+                <a class="project_view" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+                  <i class="bi bi-arrow-right-circle"></i>
+                </a>
               </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
-      <div class="col-sm-3 mb-4" th:if="${isAdmin}">
-        <div class="card h-100 min-vh-75 shadow border rounded-4" style="width: 18rem; min-height: 303px; cursor: pointer; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);">
-          <a class="d-flex justify-content-center align-items-center h-100" data-bs-toggle="modal" data-bs-target="#createProjectModal" style="text-decoration: none">
-            <div class="col-lg-8 text-center">
-              <i class="bi bi-plus-circle-fill" style="font-size: 5rem; color: #ffffff;"></i>
-              <h4 style="color: white" >Create project</h4>
+    </div>
+    <div class="col">
+      <h4 class="status_title">Doing</h4>
+      <div class="status-container">
+        <div th:each="project : ${projects}" th:if="${project.status == 'doing'}" class="project-card">
+          <a th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+            <div class="project_card">
+              <div class="project_card_top">
+                <h5 th:text="${project.name}"></h5>
+                <p th:text="${project.description}"></p>
+              </div>
+              <div class="project_dropdown">
+                <a class="project_dropdown_btn" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots"></i>
+                </a>
+                <ul class="dropdown-menu dark-mode-dropdown">
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal" th:if="${isAdmin}" th:data-project-id="${project.project_id}" th:data-project-name="${project.name}" th:data-project-description="${project.description}" th:data-project-status="${project.status}" th:data-project-budget="${project.budget}" th:data-project-start-date="${project.startDate}" th:data-project-end-date="${project.endDate}">
+                      <i class="bi bi-pen"></i> Edit project
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}" th:data-assignedUsers="${assignedUsers}" th:if="${isAdmin}">
+                      <i class="bi bi-person-add"></i> Assign User
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignCustomerModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}">
+                      <i class="bi bi-building-add"></i> Invite Customer
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" th:href="@{'/delete/project/' + ${project.project_id}}" th:if="${isAdmin}">
+                      <i class="bi bi-trash3"></i> Delete project
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <p class="project_status" th:classappend="${'status-' + project.status.toLowerCase()}" th:text="${#strings.capitalize(project.status)}"></p>
+              <div class="project_card_bottom">
+                <p class="project_budget" >
+                  <i class="bi bi-cash"></i>
+                  <th:block th:text="${project.getFormattedBudget()}"></th:block>
+                </p>
+                <p class="project_date">
+                  <i class="bi bi-calendar3"></i>
+                  <th:block th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></th:block>
+                </p>
+                <a class="project_view" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+                  <i class="bi bi-arrow-right-circle"></i>
+                </a>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h4 class="status_title">Done</h4>
+      <div class="status-container">
+        <div th:each="project : ${projects}" th:if="${project.status == 'done'}" class="project-card">
+          <a th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+            <div class="project_card">
+              <div class="project_card_top">
+                <h5 th:text="${project.name}"></h5>
+                <p th:text="${project.description}"></p>
+              </div>
+              <div class="project_dropdown">
+                <a class="project_dropdown_btn" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots"></i>
+                </a>
+                <ul class="dropdown-menu dark-mode-dropdown">
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#editProjectModal" th:if="${isAdmin}" th:data-project-id="${project.project_id}" th:data-project-name="${project.name}" th:data-project-description="${project.description}" th:data-project-status="${project.status}" th:data-project-budget="${project.budget}" th:data-project-start-date="${project.startDate}" th:data-project-end-date="${project.endDate}">
+                      <i class="bi bi-pen"></i> Edit project
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignProjectModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}">
+                      <i class="bi bi-person-add"></i> Assign User
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#assignCustomerModal" th:data-project-id="${project.project_id}" th:if="${isAdmin}">
+                      <i class="bi bi-building-add"></i> Invite Customer
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" type="button" th:href="@{'/delete/project/' + ${project.project_id}}" th:if="${isAdmin}">
+                      <i class="bi bi-trash3"></i> Delete project
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <p class="project_status" th:classappend="${'status-' + project.status.toLowerCase()}" th:text="${#strings.capitalize(project.status)}"></p>
+              <div class="project_card_bottom">
+                <p class="project_budget" >
+                  <i class="bi bi-cash"></i>
+                  <th:block th:text="${project.getFormattedBudget()}"></th:block>
+                </p>
+                <p class="project_date">
+                  <i class="bi bi-calendar3"></i>
+                  <th:block th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></th:block>
+                </p>
+                <a class="project_view" th:href="@{'/' + ${project.project_id}+ '/subprojects'}">
+                  <i class="bi bi-arrow-right-circle"></i>
+                </a>
+              </div>
             </div>
           </a>
         </div>
@@ -79,30 +222,58 @@
     </div>
   </div>
 </div>
-
-<div class="modal fade" id="assignProjectModal" tabindex="-1" aria-labelledby="assignProjectModalLabel" aria-hidden="true">
+<div class="modal fade dark-mode-modal" id="assignProjectModal" tabindex="-1" aria-labelledby="assignProjectModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content dark-mode-content">
+      <div class="modal-header border-0">
         <h5 class="modal-title" id="assignProjectModalLabel">Assign User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div></div>
+        <div class="table-responsive">
+          <table class="table m-0">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Hourly Rate</th>
+              <th scope="col">Role</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="assignedUser : ${assignedUsers}" th:if="${assignedUser.project_id == assignProjectId}">
+              <td th:text="${assignedUser.name}"></td>
+              <td th:text="${assignedUser.hourly_rate}"></td>
+              <td th:text="${assignedUser.role}"></td>
+              <td>
+                <ul class="list-inline m-0">
+                  <li class="list-inline-item">
+                    <button class="btn btn-danger btn-sm rounded-0" type="button">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
         <form action="/assignUser/project" method="post">
           <div>
-            <input type="hidden" name="project_id" id="assignProjectId"/>
+            <input type="hidden" name="project_id" id="assignProjectId" th:value="${assignProjectId}"/>
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control border border-primary">
+            <input type="email" name="email" class="form-control dark-mode-input">
           </div>
           <div class="mb-3">
             <label class="form-label">Hourly Rate (in DKK)</label>
-            <input type="number" name="hourly_rate" class="form-control border border-primary">
+            <input type="number" name="hourly_rate" class="form-control dark-mode-input">
           </div>
           <div class="mb-3">
             <label class="form-label">Role</label>
-            <select name="role" class="form-select border border-primary" >
+            <select name="role" class="form-select dark-mode-input">
               <option value="Developer">Developer</option>
               <option value="Designer">Designer</option>
               <option value="Marketing">Marketing</option>
@@ -110,97 +281,85 @@
             </select>
           </div>
           <div class="d-grid">
-            <button class="btn p-2 m-1"
-                    style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);"
-                    type="submit">Assign User
-            </button>
+            <button class="btn p-2 m-1 dark-mode-button" type="submit">Assign User</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-<div class="modal fade" id="assignCustomerModal" tabindex="-1" aria-labelledby="assignCustomerModalLabel" aria-hidden="true">
+<div class="modal fade dark-mode-modal" id="assignCustomerModal" tabindex="-1" aria-labelledby="assignCustomerModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content dark-mode-content">
+      <div class="modal-header border-0">
         <h5 class="modal-title" id="assignCustomerModalLabel">Add Customer</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
         <form id="assignCustomerForm" method="post">
           <div>
-            <input type="hidden" name="project_id" id="assignCustomerId"/>
+            <input type="hidden" name="project_id" id="assignCustomerId" />
           </div>
           <div class="mb-3">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control border border-primary">
+            <input type="email" name="email" class="form-control dark-mode-input">
           </div>
           <div class="d-grid">
-            <button id="addCustomerButton" class="btn p-2 m-1"
-                    style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);"
-                    type="submit">Add customer
-            </button>
+            <button id="addCustomerButton" class="btn p-2 m-1 dark-mode-button" type="submit">Add Customer</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
-
-<div class="modal fade" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+<div class="modal fade dark-mode-modal" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content dark-mode-content">
+      <div class="modal-header border-0">
         <h5 class="modal-title" id="createProjectModalLabel">Create Project</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form action="/create/project" method="post" th:object="${project}">
           <div class="mb-3">
             <label class="form-label">Name</label>
-            <input type="text" name="name" class="form-control border border-primary">
+            <input type="text" name="name" class="form-control dark-mode-input">
           </div>
           <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" name="description" class="form-control border border-primary">
+            <textarea name="description" class="form-control dark-mode-input"></textarea>
           </div>
           <div class="mb-3">
             <label class="form-label">Status</label>
-            <select name="status" class="form-select border border-primary" >
+            <select name="status" class="form-select dark-mode-input">
               <option value="todo" selected>Todo</option>
               <option value="doing">Doing</option>
               <option value="done">Done</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">Budget</label>
-            <input type="number" name="budget" class="form-control border border-primary">
+            <label class="form-label">Budget in DKK</label>
+            <input type="number" name="budget" class="form-control dark-mode-input">
           </div>
           <div class="mb-3">
             <label class="form-label">Deadline</label>
-            <input type="datetime-local" name="endDate" class="form-control border border-primary">
+            <input type="datetime-local" name="endDate" class="form-control dark-mode-input" min="2023-05-05T14:47">
           </div>
           <div class="d-grid">
-            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Create Project</button>
+            <button class="btn p-2 m-1 dark-mode-button" type="submit">Create Project</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
 <div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content dark-mode-content">
+      <div class="modal-header border-0">
         <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form action="/update/project" method="post">
@@ -209,33 +368,33 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Name</label>
-            <input type="text" name="name" id="editName" class="form-control border border-primary" >
+            <input type="text" name="name" id="editName" class="form-control dark-mode-input">
           </div>
           <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" name="description" id="editDescription" class="form-control border border-primary">
+            <textarea type="text" name="description" id="editDescription" class="form-control dark-mode-input"></textarea>
           </div>
           <div class="mb-3">
             <label class="form-label">Status</label>
-            <select name="status" id="editStatus" class="form-select border border-primary" >
+            <select name="status" id="editStatus" class="form-select dark-mode-input">
               <option value="todo">Todo</option>
               <option value="doing">Doing</option>
               <option value="done">Done</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">Budget</label>
-            <input type="number" name="budget"  id="editBudget" class="form-control border border-primary">
+            <label class="form-label">Budget in DKK</label>
+            <input type="number" name="budget" id="editBudget" class="form-control dark-mode-input">
           </div>
           <div>
-            <input type="hidden" name="startDate" id="editStartDate"/>
+            <input type="hidden" name="startDate" id="editStartDate" />
           </div>
           <div class="mb-3">
             <label class="form-label">Deadline</label>
-            <input type="datetime-local" name="endDate" id="editEndDate" class="form-control border border-primary">
+            <input type="datetime-local" name="endDate" id="editEndDate" class="form-control dark-mode-input">
           </div>
           <div class="d-grid">
-            <button class="btn p-2 m-1" style="color: white; background: linear-gradient(0deg, rgba(34,195,109,1) 0%, rgba(8,223,0,1) 100%);" type="submit">Update Project</button>
+            <button class="btn p-2 m-1 dark-mode-button" type="submit">Update Project</button>
           </div>
         </form>
       </div>
@@ -252,21 +411,17 @@
     $('#editStartDate').val(project.startDate);
     $('#editEndDate').val(project.endDate);
   }
-
-  $(document).on('show.bs.modal', '#assignProjectModal', function (event) {
+  $(document).on('show.bs.modal', '#assignProjectModal', function(event) {
     var button = $(event.relatedTarget);
     project_id = button.data('project-id');
     $('#assignProjectId').val(project_id);
   });
-
-  $(document).on('show.bs.modal', '#assignCustomerModal', function (event) {
+  $(document).on('show.bs.modal', '#assignCustomerModal', function(event) {
     var button = $(event.relatedTarget);
     project_id = button.data('project-id');
     $('#assignCustomerId').val(project_id);
   });
-
-
-  $(document).on('show.bs.modal', '#editProjectModal', function (event) {
+  $(document).on('show.bs.modal', '#editProjectModal', function(event) {
     var button = $(event.relatedTarget);
     var project = {
       project_id: button.data('project-id'),
@@ -279,11 +434,9 @@
     };
     editFormData(project);
   });
-
   $(document).ready(function() {
     $('#assignCustomerForm').submit(function(event) {
       event.preventDefault();
-
       var formData = $(this).serialize();
       $.ajax({
         type: 'POST',
@@ -307,8 +460,18 @@
   });
 
 
+  let currentDate = new Date().toISOString().slice(0, -8);
+  let endDateInputs = document.querySelectorAll('input[name="endDate"]');
+
+
+  endDateInputs.forEach(function(dateInput) {
+    dateInput.min = new Date().toISOString().slice(0, new Date().toISOString().lastIndexOf(":"));
+    dateInput.value = currentDate;
+  });
 
 
 </script>
 </body>
+
+
 

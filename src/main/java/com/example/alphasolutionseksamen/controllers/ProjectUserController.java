@@ -1,17 +1,15 @@
 package com.example.alphasolutionseksamen.controllers;
 
+
 import com.example.alphasolutionseksamen.DTO.Project_members;
-import com.example.alphasolutionseksamen.model.Project;
-import com.example.alphasolutionseksamen.model.User;
 import com.example.alphasolutionseksamen.repository.ProjectMembersRepository;
 import com.example.alphasolutionseksamen.repository.ProjectRepository;
 import com.example.alphasolutionseksamen.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class ProjectUserController {
@@ -19,11 +17,13 @@ public class ProjectUserController {
     UserRepository userRepository;
     ProjectMembersRepository projectMembersRepository;
 
+
     public ProjectUserController() {
         projectRepository = new ProjectRepository();
         userRepository = new UserRepository();
         projectMembersRepository = new ProjectMembersRepository();
     }
+
 
     @PostMapping("/assignUser/project")
     public String assignUserProject(@RequestParam("project_id") int project_id,
@@ -37,3 +37,6 @@ public class ProjectUserController {
         return "redirect:/projects";
     }
 }
+
+
+

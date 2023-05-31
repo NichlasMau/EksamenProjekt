@@ -1,22 +1,24 @@
 package com.example.alphasolutionseksamen.repository;
 
+
 import com.example.alphasolutionseksamen.DTO.Project_members;
 import com.example.alphasolutionseksamen.model.Project;
-import com.example.alphasolutionseksamen.model.Task;
-import com.example.alphasolutionseksamen.model.User;
 import org.springframework.stereotype.Repository;
+
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Repository
 public class ProjectMembersRepository {
     DBConnector connector;
 
-    public List<Project> getUserProjects(int givenUserId) {
-        List<Project> projects = new ArrayList<>();
+
+    public List < Project > getUserProjects(int givenUserId) {
+        List < Project > projects = new ArrayList < > ();
         try (Connection con = DBConnector.getConnection()) {
             String SQL = "SELECT * FROM projects p JOIN project_members pm ON p.project_id = pm.project_id WHERE pm.user_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
@@ -38,8 +40,9 @@ public class ProjectMembersRepository {
         }
     }
 
+
     public boolean userHasProject(int userId) {
-        try (Connection con = connector.getConnection()){
+        try (Connection con = connector.getConnection()) {
             String SQl = "SELECT COUNT(*) FROM project_members WHERE user_id = ? AND role = 'Administrator';";
             PreparedStatement pstmt = con.prepareStatement(SQl, Statement.RETURN_GENERATED_KEYS);
             pstmt.setInt(1, userId);
@@ -54,8 +57,34 @@ public class ProjectMembersRepository {
         }
     }
 
+
+    public List < Project_members > getAssignedUserProject(int userId) {
+        List < Project_members > users = new ArrayList < > ();
+        try (Connection con = connector.getConnection()) {
+            String SQL = "SELECT pm.project_member_id, pm.hourly_rate, pm.project_id, pm.role, u.user_id, u.name AS user_name, u.email AS user_email FROM project_members pm JOIN users u ON pm.user_id = u.user_id WHERE pm.user_id = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+
+            while (rs.next()) {
+                int user_id = rs.getInt("user_id");
+                String name = rs.getString("user_name");
+                String email = rs.getString("user_email");
+                int hourly_rate = rs.getInt("hourly_rate");
+                int project_id = rs.getInt("project_id");
+                String role = rs.getString("role");
+                users.add(new Project_members(user_id, name, email, hourly_rate, project_id, role));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
+    }
+
+
     public void assignUserProject(Project_members projectMember) {
-        try (Connection con = connector.getConnection()){
+        try (Connection con = connector.getConnection()) {
             String SQl = "INSERT INTO project_members (user_id, hourly_rate, project_id, role) VALUES (?, ?, ?, ?)";
             PreparedStatement psmt = con.prepareStatement(SQl, Statement.RETURN_GENERATED_KEYS);
             psmt.setInt(1, projectMember.getUser_id());
@@ -68,4 +97,8 @@ public class ProjectMembersRepository {
         }
     }
 
+
 }
+
+
+
