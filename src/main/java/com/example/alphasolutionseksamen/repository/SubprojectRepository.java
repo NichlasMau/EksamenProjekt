@@ -10,10 +10,12 @@ import java.util.List;
 @Repository
 public class SubprojectRepository {
 
+
     DBConnector connector;
 
-    public List<Subproject> getSubproject() {
-        List<Subproject> subprojects = new ArrayList<>();
+
+    public List < Subproject > getSubproject() {
+        List < Subproject > subprojects = new ArrayList < > ();
         try (Connection con = connector.getConnection()) {
             String SQL = "SELECT * FROM subprojects;";
             Statement stmt = con.createStatement();
@@ -36,8 +38,8 @@ public class SubprojectRepository {
     }
 
 
-    public List<Subproject> getUserSubprojects(int givenUserId, int givenProjectId) {
-        List<Subproject> subprojects = new ArrayList<>();
+    public List < Subproject > getUserSubprojects(int givenUserId, int givenProjectId) {
+        List < Subproject > subprojects = new ArrayList < > ();
         try (Connection con = connector.getConnection()) {
             String SQL = "SELECT * FROM subprojects sp JOIN projects p ON sp.project_id = p.project_id JOIN project_members pm ON p.project_id = pm.project_id WHERE pm.user_id = ? AND sp.project_id = ?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
@@ -61,6 +63,7 @@ public class SubprojectRepository {
         }
     }
 
+
     public void createSubproject(Subproject subprojects) {
         try (Connection con = connector.getConnection()) {
             String SQL = "INSERT INTO `subprojects` (`project_id`, `name`, `description`, `status`,`budget`,`start_date`,`end_date` ) VALUES (?, ?, ?, ?,?,?,?);";
@@ -77,6 +80,7 @@ public class SubprojectRepository {
             throw new RuntimeException(e);
         }
     }
+
 
     public void updateSubproject(Subproject subproject) {
         try (Connection con = connector.getConnection()) {
@@ -95,6 +99,7 @@ public class SubprojectRepository {
         }
     }
 
+
     public void deleteSubproject(int subprojectID) {
         try (Connection con = connector.getConnection()) {
             String SQL = "DELETE FROM subprojects WHERE subproject_id = ?;";
@@ -105,4 +110,98 @@ public class SubprojectRepository {
             throw new RuntimeException(e);
         }
     }
+
+
+    public boolean checkIfExceedsBudget(int projectId, double newBudget) {
+        int projectBudget = getProjectBudget(projectId);
+        int projectUsedBudget = getProjectSetBudget(projectId);
+
+
+        return (projectUsedBudget + newBudget >= projectBudget);
+    }
+
+
+    public int getProjectBudgetUsed(int projectId) {
+        try (Connection con = connector.getConnection()) {
+            String SQL = "SELECT SUM(budget) AS total_budget FROM subprojects WHERE project_id = ? AND status = 'done';";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, projectId);
+            ResultSet rs = pstmt.executeQuery();
+
+
+            if (rs.next()) {
+                return rs.getInt("total_budget");
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public int getProjectSetBudget(int projectId) {
+        try (Connection con = connector.getConnection()) {
+            String SQL = "SELECT SUM(budget) AS total_budget FROM subprojects WHERE project_id = ?";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, projectId);
+            ResultSet rs = pstmt.executeQuery();
+
+
+            if (rs.next()) {
+                return rs.getInt("total_budget");
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public int getProjectBudget(int projectId) {
+        try (Connection con = connector.getConnection()) {
+            String SQL = "SELECT budget FROM projects WHERE project_id = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, projectId);
+            ResultSet rs = pstmt.executeQuery();
+
+
+            if (rs.next()) {
+                return rs.getInt("budget");
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public List < Subproject > getCustomerSubprojects(int givenCustomerId) {
+        List < Subproject > subprojects = new ArrayList < > ();
+        try (Connection con = DBConnector.getConnection()) {
+            String SQL = "SELECT * FROM subprojects p JOIN project_customers pm ON p.project_id = pm.project_id WHERE pm.customer_id = ?";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, givenCustomerId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("subproject_id");
+                int project_id = rs.getInt("project_id");
+                String name = rs.getString("name");
+                String description = rs.getString("description");
+                LocalDateTime startDate = rs.getTimestamp("start_date").toLocalDateTime();
+                LocalDateTime endDate = rs.getTimestamp("end_date").toLocalDateTime();
+                String status = rs.getString("status");
+                Double budget = rs.getDouble("budget");
+                subprojects.add(new Subproject(id, project_id, name, description, status, budget, startDate, endDate));
+            }
+            return subprojects;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
+

@@ -1,18 +1,13 @@
 package com.example.alphasolutionseksamen.controllers;
 
-import com.example.alphasolutionseksamen.DTO.Project_members;
+
 import com.example.alphasolutionseksamen.DTO.Task_members;
-import com.example.alphasolutionseksamen.model.Subproject;
-import com.example.alphasolutionseksamen.model.User;
 import com.example.alphasolutionseksamen.repository.ProjectRepository;
 import com.example.alphasolutionseksamen.repository.TaskMembersRepository;
 import com.example.alphasolutionseksamen.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Controller
 public class TaskMemberController {
@@ -20,11 +15,13 @@ public class TaskMemberController {
     TaskMembersRepository taskMembersRepository;
     ProjectRepository projectRepository;
 
+
     public TaskMemberController() {
         userRepository = new UserRepository();
         taskMembersRepository = new TaskMembersRepository();
         projectRepository = new ProjectRepository();
     }
+
 
     @PostMapping("/assignUser/task")
     public String assignUserProject(@RequestParam("user_id") int user_id,
@@ -36,3 +33,6 @@ public class TaskMemberController {
         return "redirect:/" + subproject_id + "/tasks";
     }
 }
+
+
+

@@ -2,7 +2,6 @@ package com.example.alphasolutionseksamen.model;
 
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 public class Subproject {
@@ -14,6 +13,8 @@ public class Subproject {
     private double budget;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+
 
 
     public Subproject(int subproject_id, int project_id, String name, String description, String status, double budget, LocalDateTime startDate, LocalDateTime endDate) {
@@ -28,8 +29,12 @@ public class Subproject {
     }
 
 
+
+
     public Subproject() {
     }
+
+
 
 
     public int getSubproject_id() {
@@ -37,9 +42,13 @@ public class Subproject {
     }
 
 
+
+
     public void setSubproject_id(int subproject_id) {
         this.subproject_id = subproject_id;
     }
+
+
 
 
     public int getProject_id() {
@@ -47,9 +56,13 @@ public class Subproject {
     }
 
 
+
+
     public void setProject_id(int project_id) {
         this.project_id = project_id;
     }
+
+
 
 
     public String getName() {
@@ -57,9 +70,13 @@ public class Subproject {
     }
 
 
+
+
     public void setName(String name) {
         this.name = name;
     }
+
+
 
 
     public String getDescription() {
@@ -67,9 +84,13 @@ public class Subproject {
     }
 
 
+
+
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 
 
     public String getStatus() {
@@ -77,9 +98,13 @@ public class Subproject {
     }
 
 
+
+
     public void setStatus(String status) {
         this.status = status;
     }
+
+
 
 
     public double getBudget() {
@@ -87,9 +112,13 @@ public class Subproject {
     }
 
 
+
+
     public void setBudget(double budget) {
         this.budget = budget;
     }
+
+
 
 
     public LocalDateTime getStartDate() {
@@ -97,9 +126,13 @@ public class Subproject {
     }
 
 
+
+
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
+
+
 
 
     public LocalDateTime getEndDate() {
@@ -107,7 +140,17 @@ public class Subproject {
     }
 
 
+
+
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+
+    public String getFormattedBudget() {
+        return String.format("%dkr", (int) budget);
+    }
 }
+
+
+
