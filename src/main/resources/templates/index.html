@@ -531,7 +531,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <h5 class="modal-title" id="loginModalLabel">Login as user</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -551,6 +551,39 @@
               up</a>
           </div>
         </form>
+        <hr class="hr" />
+        <a class="btn p-2 m-1" data-bs-target="#loginCustomerModal" data-bs-toggle="modal" data-bs-dismiss="modal"  style="background-color: #0037aa; width: 100%; color: white">Login as customer</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="loginCustomerModal" tabindex="-1" aria-labelledby="loginCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginCustomerModalLabel">Login as customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="customerErrorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <form id="customerLoginForm" method="post">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control border border-primary">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="pw" class="form-control border border-primary">
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary p-2 m-1" type="submit">Login</button>
+            <a class="btn btn-light p-2 m-1" data-bs-toggle="modal" data-bs-target="#signUpCustomerModal">Sign up</a>
+          </div>
+        </form>
+        <hr class="hr" />
+        <a class="btn p-2 m-1" data-bs-target="#loginModal" data-bs-toggle="modal" data-bs-dismiss="modal" style="background-color: #0037aa; width: 100%; color: white">Login as user</a>
       </div>
     </div>
   </div>
@@ -561,15 +594,54 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="signUpModalLabel">Sign up</h5>
+        <h5 class="modal-title" id="signUpModalLabel">Sign up as user</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div th:if="${signUpError}" th:text="${signUpError}" class="alert alert-danger" role="alert">
-        </div>
-        <form action="#" th:action="@{/signup}" method="post" th:object="${user}">
+        <div id="signupErrorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <form id="signupForm" method="post" th:object="${user}">
           <div class="mb-3">
             <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control border border-primary" field="*{name}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control border border-primary" field="*{username}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control border border-primary" field="*{email}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control border border-primary"
+                   field="*{password}" required>
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary p-2 m-1" type="submit">Sign up</button>
+            <a class="btn btn-light p-2 m-1" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+          </div>
+        </form>
+        <hr class="hr" />
+        <a class="btn p-2 m-1" data-bs-toggle="modal" data-bs-target="#signUpCustomerModal" style="background-color: #0037aa; width: 100%; color: white">Signup as customer</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="signUpCustomerModal" tabindex="-1" aria-labelledby="signUpCustomerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signUpCustomerModalLabel">Sign up as customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="customerSignupErrorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+        <form id="customerSignupForm" method="post" th:object="${customer}">
+          <div class="mb-3">
+            <label class="form-label">Company name</label>
             <input type="text" name="name" class="form-control border border-primary" field="*{name}">
           </div>
           <div class="mb-3">
@@ -586,6 +658,8 @@
             <a class="btn btn-light p-2 m-1" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
           </div>
         </form>
+        <hr class="hr" />
+        <a class="btn p-2 m-1" data-bs-toggle="modal" data-bs-target="#signUpCustomerModal" style="background-color: #0037aa; width: 100%; color: white">Signup as customer</a>
       </div>
     </div>
   </div>
@@ -597,7 +671,6 @@
 <script>
   $(document).ready(function() {
     $('#loginForm').submit(function(event) {
-      console.log("workng...")
       event.preventDefault();
 
 
@@ -620,6 +693,81 @@
         }
       });
     });
+
+
+    $('#signupForm').submit(function(event) {
+      event.preventDefault();
+
+
+      var formData = $(this).serialize();
+      $.ajax({
+        type: 'POST',
+        url: '/signup',
+        data: formData,
+        success: function(result) {
+          if (result === 'SUCCESS') {
+            window.location.href = '/projects';
+          } else {
+            $('#customerErrorMessage').text(result);
+            $('#customerErrorMessage').show();
+          }
+        },
+        error: function(xhr) {
+          $('#customerErrorMessage').text(xhr.responseText);
+          $('#customerErrorMessage').show();
+        }
+      });
+    });
+  });
+
+
+  $('#customerLoginForm').submit(function(event) {
+    event.preventDefault();
+
+
+    var formData = $(this).serialize();
+    $.ajax({
+      type: 'POST',
+      url: '/loginCustomer',
+      data: formData,
+      success: function(result) {
+        if (result === 'SUCCESS') {
+          window.location.href = '/projects';
+        } else {
+          $('#errorMessage').text(result);
+          $('#errorMessage').show();
+        }
+      },
+      error: function() {
+        $('#errorMessage').text('User not found!');
+        $('#errorMessage').show();
+      }
+    });
+  });
+
+
+  $('#customerSignupForm').submit(function(event) {
+    event.preventDefault();
+
+
+    var formData = $(this).serialize();
+    $.ajax({
+      type: 'POST',
+      url: '/signupCustomer',
+      data: formData,
+      success: function(result) {
+        if (result === 'SUCCESS') {
+          window.location.href = '/projects';
+        } else {
+          $('#customerSignupErrorMessage').text(result);
+          $('#customerSignupErrorMessage').show();
+        }
+      },
+      error: function(xhr) {
+        $('#customerSignupErrorMessage').text(xhr.responseText);
+        $('#customerSignupErrorMessage').show();
+      }
+    });
   });
 </script>
 <!------------ Link to Bootstrap JS og jQuery ------------>
@@ -635,4 +783,5 @@
 
 
 </html>
+
 

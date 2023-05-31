@@ -6,15 +6,24 @@ public class Customer {
     private String name;
     private String email;
     private String password;
-    private int phone;
 
 
-    public Customer(int customer_id, String name, String email, String password, int phone) {
+    public Customer(int customer_id, String name, String email, String password) {
         this.customer_id = customer_id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.phone = phone;
+    }
+
+
+    public Customer(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+
+    public Customer() {
     }
 
 
@@ -56,17 +65,9 @@ public class Customer {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
-    public int getPhone() {
-        return phone;
-    }
-
-
-    public void setPhone(int phone) {
-        this.phone = phone;
-    }
 }
+
+
 
 
 
