@@ -7,7 +7,7 @@ View our project live on Render: [https://projectmanagementproject.onrender.com/
 ### Test Login (User)
 | Email  | Password |
 | ------------- | ------------- |
-| johndoe@example.com  | password  |
+| johndoe@example.com  | password123  |
 
 
 
