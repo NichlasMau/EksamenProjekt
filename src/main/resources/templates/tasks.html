@@ -65,7 +65,7 @@
         <h4>Time spent</h4>
         <div class="h-100 progress-label-container">
             <div class="progress">
-                <div class="progress-bar progress-time" role="progressbar" th:style="'width: ' + (${estimatedTotalTimeFinished} / ${estimatedTotalTime} * 100) + '%;'" th:text="${estimatedTotalTimeFinished} + 'h / ' + ${estimatedTotalTime} + 'h'" aria-valuemin="0" aria-valuemax="${subproject_budget}" th:aria-valuenow="${subproject_budgetUsed}"></div>
+                <div class="progress-bar progress-time" role="progressbar" th:style="'width: ' + ${estimatedTotalTimeFinished} / ((${estimatedTotalTime} > 0) ? (${estimatedTotalTime} * 100) : 1) + '%;'" th:text="${estimatedTotalTimeFinished} + 'h / ' + ${estimatedTotalTime} + 'h'" aria-valuemin="0" aria-valuemax="${subproject_budget}" th:aria-valuenow="${subproject_budgetUsed}"></div>
             </div>
             <div class="progress-label">
                 <p th:text="${estimatedTotalTimeLeft} + 'kr'"></p>
