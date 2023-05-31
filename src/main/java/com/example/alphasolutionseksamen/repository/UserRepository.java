@@ -1,8 +1,6 @@
 package com.example.alphasolutionseksamen.repository;
 
-
 import com.example.alphasolutionseksamen.model.User;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,25 +12,19 @@ public class UserRepository {
 
     DBConnector connector;
 
-    public int createUser(User newUser) {
-        int userID = 0;
+    public String createUser(User newUser) {
         try (Connection con = connector.getConnection()) {
-            String SQL = "INSERT INTO User (name, email, username, password) values (?,?,?,?);";
+            String SQL = "INSERT INTO users (name, email, username, password) values (?,?,?,?);";
             PreparedStatement psmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
             psmt.setString(1, newUser.getName());
             psmt.setString(2, newUser.getEmail());
             psmt.setString(3, newUser.getUsername());
             psmt.setString(4, newUser.getPassword());
             psmt.executeUpdate();
-            ResultSet rs = psmt.getGeneratedKeys();
-            if (rs.next()) {
-                userID = rs.getInt(1);
-            }
-
+            return newUser.getEmail();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return userID;
     }
 
     public User getUser(int userid) {
@@ -90,8 +82,8 @@ public class UserRepository {
         }
     }
 
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
+    public List < User > getAllUsers() {
+        List < User > users = new ArrayList < > ();
         try (Connection con = connector.getConnection()) {
             String SQL = "SELECT * FROM users";
             PreparedStatement pstmt = con.prepareStatement(SQL);
