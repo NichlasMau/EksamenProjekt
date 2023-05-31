@@ -18,7 +18,7 @@ public class ProjectRepository {
     DBConnector connector;
 
 
-    public void createProject(Project project, int givenUserId) {
+    public boolean createProject(Project project, int givenUserId) {
         try (Connection con = DBConnector.getConnection()) {
             String SQL = "INSERT INTO `projects` (`name`, `description`, `status`, `budget`, `start_date`, `end_date`) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement pstmt = con.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
@@ -41,6 +41,7 @@ public class ProjectRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return false;
     }
 
 

@@ -26,6 +26,14 @@ public class Project {
         this.endDate = endDate;
     }
 
+    public Project(String name, String description, String status, double budget, LocalDateTime startDate, LocalDateTime endDate) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.budget = budget;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     public Project() {
     }
