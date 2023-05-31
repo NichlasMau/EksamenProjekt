@@ -32,12 +32,8 @@ public class ProjectController {
     public String getProjects(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         Customer customer = (Customer) session.getAttribute("customer");
-
-
         List < Project > projects;
         String username;
-
-
         if (user != null) {
             projects = projectRepository.getUserProjects(user.getUser_id());
             model.addAttribute("updateProject", new Project());
@@ -47,8 +43,6 @@ public class ProjectController {
             if (projectMembersRepository.userHasProject(user.getUser_id())) {
                 model.addAttribute("isAdmin", true);
             }
-
-
         } else if (customer != null) {
             projects = projectRepository.getCustomerProjects(customer.getCustomer_id());
             username = customer.getName();
@@ -57,11 +51,8 @@ public class ProjectController {
         }
         model.addAttribute("projects", projects);
         model.addAttribute("username", username);
-
-
         return "projects";
     }
-
 
     @GetMapping("/create/project/{id}")
     public String createProject(@PathVariable int id, Model model) {
