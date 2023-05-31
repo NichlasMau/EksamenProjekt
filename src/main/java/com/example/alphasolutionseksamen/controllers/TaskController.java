@@ -1,10 +1,12 @@
 package com.example.alphasolutionseksamen.controllers;
 
 
+import com.example.alphasolutionseksamen.DTO.Task_members;
 import com.example.alphasolutionseksamen.model.Customer;
 import com.example.alphasolutionseksamen.model.Task;
 import com.example.alphasolutionseksamen.model.User;
 import com.example.alphasolutionseksamen.repository.ProjectMembersRepository;
+import com.example.alphasolutionseksamen.repository.TaskMembersRepository;
 import com.example.alphasolutionseksamen.repository.TaskRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,11 +23,14 @@ import java.util.List;
 public class TaskController {
     TaskRepository taskRepository;
     ProjectMembersRepository projectMembersRepository;
+    TaskMembersRepository taskMembersRepository;
+
 
 
     public TaskController() {
         taskRepository = new TaskRepository();
         projectMembersRepository = new ProjectMembersRepository();
+        taskMembersRepository = new TaskMembersRepository();
     }
 
 
@@ -52,11 +57,13 @@ public class TaskController {
         } else {
             return "redirect:/";
         }
-        List < User > assigned_users = taskRepository.getTaskUsers(id);
+        List <User> assigned_users = taskRepository.getTaskUsers(id);
+        List <Task_members> assigned_usersAll = taskMembersRepository.getTaskMembersAll(id);
         model.addAttribute("tasks", tasks);
         model.addAttribute("subproject_id", id);
         model.addAttribute("project_id", taskRepository.getProjectIdByTaskId(id));
         model.addAttribute("assigned_users", assigned_users);
+        model.addAttribute("assigned_usersAll", assigned_usersAll);
         model.addAttribute("username", username);
         model.addAttribute("subproject_budget", taskRepository.getSubprojectBudget(id));
         model.addAttribute("subproject_budgetUsed", taskRepository.getSubprojectBudgetUsed(id));

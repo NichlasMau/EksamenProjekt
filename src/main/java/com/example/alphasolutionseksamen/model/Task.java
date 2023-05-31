@@ -211,7 +211,6 @@ public class Task {
 
     public boolean isUserAssigned(User user) {
         List<User> assignedUsers = taskMembersRepository.getTaskMembers(task_id);
-        System.out.println(assignedUsers);
         return assignedUsers.contains(user);
     }
 }

@@ -687,8 +687,8 @@
             $('#errorMessage').show();
           }
         },
-        error: function() {
-          $('#errorMessage').text('User not found!');
+        error: function(xhr) {
+          $('#errorMessage').text(xhr.responseText);
           $('#errorMessage').show();
         }
       });

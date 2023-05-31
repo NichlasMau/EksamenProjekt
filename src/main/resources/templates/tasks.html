@@ -130,7 +130,16 @@
                                     <th:block th:text="${task.getTimeLeft()}"></th:block>
                                 </p>
                             </div>
-                            <div class="project_card_bottom2" style="">
+                            <div class="project_card_bottom2">
+                                <p class="assigned_users">
+                                    <i class="bi bi-people"></i>
+                                    <span th:each="a_user : ${assigned_usersAll}" th:if="${a_user.getTask_id() eq task.getTask_id()}">
+                                        <span th:text="${a_user.name}"></span>
+                                    </span>
+                                    <span th:each="a_user : ${assigned_usersAll}" th:if="${a_user.getTask_id() ne task.getTask_id()}">
+                                        <span>None</span>
+                                    </span>
+                                </p>
                                 <p class="project_date">
                                     <i class="bi bi-hourglass"></i>
                                     <th:block th:text="${task.getEstimated_time() + 'h'}"></th:block>
@@ -193,7 +202,16 @@
                                     <th:block th:text="${task.getTimeLeft()}"></th:block>
                                 </p>
                             </div>
-                            <div class="project_card_bottom2" style="">
+                            <div class="project_card_bottom2">
+                                <p class="assigned_users">
+                                    <i class="bi bi-people"></i>
+                                    <span th:each="a_user : ${assigned_usersAll}" th:if="${a_user.getTask_id() eq task.getTask_id()}">
+                                        <span th:text="${a_user.name}"></span>
+                                    </span>
+                                    <span th:each="a_user : ${assigned_usersAll}" th:if="${a_user.getTask_id() ne task.getTask_id()}">
+                                        <span>None</span>
+                                    </span>
+                                </p>
                                 <p class="project_date">
                                     <i class="bi bi-hourglass"></i>
                                     <th:block th:text="${task.getEstimated_time() + 'h'}"></th:block>
@@ -256,7 +274,13 @@
                                     <th:block th:text="${task.getTimeLeft()}"></th:block>
                                 </p>
                             </div>
-                            <div class="project_card_bottom2" style="">
+                            <div class="project_card_bottom2">
+                                <p class="assigned_users">
+                                    <i class="bi bi-people"></i>
+                                    <span th:each="a_user : ${assigned_usersAll}" th:if="${a_user.getTask_id() eq task.getTask_id()}">
+                                        <span th:text="${a_user.name}"></span>
+                                    </span>
+                                </p>
                                 <p class="project_date">
                                     <i class="bi bi-hourglass"></i>
                                     <th:block th:text="${task.getEstimated_time() + 'h'}"></th:block>
@@ -277,7 +301,32 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/assignUser/task" method="post">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="assignedUser : ${assigned_usersAll}" th:if="${assignedUser.getTask_id() eq acTask_id}">
+                            <td th:text="${assignedUser.name}"></td>
+                            <td>
+                                <ul class="list-inline m-0">
+                                    <li class="list-inline-item">
+                                        <button class="btn btn-danger btn-sm rounded-0" type="button">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <form id="assignUser" method="post">
+                    <div id="errorMessageAssignUser" class="alert alert-danger" role="alert" style="display: none;"></div>
                     <div>
                         <input type="hidden" name="task_id" id="assignTaskId"/>
                         <input type="hidden" name="subproject_id" th:value="${subproject_id}"/>
@@ -398,6 +447,31 @@
     </div>
 </div>
 <script>
+    $(document).ready(function() {
+        $('#assignUser').submit(function (event) {
+            event.preventDefault();
+
+
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/assignUser/task',
+                data: formData,
+                success: function (result) {
+                    if (result === 'SUCCESS') {
+                        window.location.reload();
+                    } else {
+                        $('#errorMessageAssignUser').text(result);
+                        $('#errorMessageAssignUser').show();
+                    }
+                },
+                error: function (xhr) {
+                    $('#errorMessageAssignUser').text(xhr.responseText);
+                    $('#errorMessageAssignUser').show();
+                }
+            });
+        });
+    });
     function editFormData(task) {
         $('#editTaskId').val(task.task_id);
         $('#editSubprojectId').val(task.subproject_id);
@@ -415,8 +489,6 @@
         var button = $(event.relatedTarget);
         task_id = button.data('task-id');
         $('#assignTaskId').val(task_id);
-
-
     });
 
 
