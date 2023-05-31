@@ -3,6 +3,8 @@ A projectmangement tool made for Alpha Solutions to help organize projects.
 
 ## Live Demo
 View our project live on Render: [https://projectmanagementproject.onrender.com/](https://projectmanagementproject.onrender.com/)
+*Notice: Website may be slow due to it being hosted on a free tier!
+
 
 ### Test Login (User)
 | Email  | Password |
